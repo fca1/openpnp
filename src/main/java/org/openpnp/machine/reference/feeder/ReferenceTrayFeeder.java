@@ -64,7 +64,8 @@ public class ReferenceTrayFeeder extends ReferenceFeeder {
         return pickLocation;
     }
 
-    public void feed(Nozzle nozzle) throws Exception {
+    @Override
+	public void feed(Nozzle nozzle) throws Exception {
         logger.debug("{}.feed({})", getName(), nozzle);
         int partX, partY;
 

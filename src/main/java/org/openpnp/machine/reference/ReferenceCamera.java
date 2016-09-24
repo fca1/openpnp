@@ -19,6 +19,7 @@
 
 package org.openpnp.machine.reference;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -365,7 +366,10 @@ public abstract class ReferenceCamera extends AbstractCamera implements Referenc
         return calibration;
     }
 
-    @Override
+    
+   
+
+	@Override
     public Location getLocation() {
         // If this is a fixed camera we just treat the head offsets as it's
         // table location.
@@ -438,5 +442,6 @@ public abstract class ReferenceCamera extends AbstractCamera implements Referenc
         public void setDistortionCoefficientsMat(Mat distortionCoefficients) {
             this.distortionCoefficients = distortionCoefficients.clone();
         }
+        
     }
 }

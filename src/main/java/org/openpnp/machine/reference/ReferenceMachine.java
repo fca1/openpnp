@@ -33,6 +33,7 @@ import org.openpnp.machine.reference.camera.ImageCamera;
 import org.openpnp.machine.reference.camera.LtiCivilCamera;
 import org.openpnp.machine.reference.camera.OnvifIPCamera;
 import org.openpnp.machine.reference.camera.OpenCvCamera;
+import org.openpnp.machine.reference.camera.OpenCvCameraLed;
 import org.openpnp.machine.reference.camera.SimulatedUpCamera;
 import org.openpnp.machine.reference.camera.VfwCamera;
 import org.openpnp.machine.reference.camera.Webcams;
@@ -80,6 +81,8 @@ public class ReferenceMachine extends AbstractMachine {
     @Element(required = false)
     protected FiducialLocator fiducialLocator = new ReferenceFiducialLocator();
 
+    
+    
     private boolean enabled;
 
     private List<Class<? extends Feeder>> registeredFeederClasses = new ArrayList<>();
@@ -191,6 +194,7 @@ public class ReferenceMachine extends AbstractMachine {
         l.add(LtiCivilCamera.class);
         l.add(VfwCamera.class);
         l.add(OpenCvCamera.class);
+        l.add(OpenCvCameraLed.class);
         l.add(OnvifIPCamera.class);
         l.add(ImageCamera.class);
         l.add(SimulatedUpCamera.class);

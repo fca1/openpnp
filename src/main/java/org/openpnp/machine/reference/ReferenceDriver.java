@@ -19,6 +19,7 @@
 
 package org.openpnp.machine.reference;
 
+import java.awt.Color;
 import java.io.Closeable;
 
 import org.openpnp.model.Location;
@@ -115,4 +116,11 @@ public interface ReferenceDriver extends WizardConfigurable, PropertySheetHolder
 
     public void dispense(ReferencePasteDispenser dispenser, Location startLocation,
             Location endLocation, long dispenseTimeMilliseconds) throws Exception;
+    
+    
+    public default void setLightingColor(Color color) throws Exception
+    {
+    	
+    }
+    
 }

@@ -82,7 +82,8 @@ public class ReferenceStripFeeder extends ReferenceFeeder {
             this.name = name;
         }
 
-        public String toString() {
+        @Override
+		public String toString() {
             return name;
         }
     }
@@ -200,7 +201,8 @@ public class ReferenceStripFeeder extends ReferenceFeeder {
         }
     }
 
-    public void feed(Nozzle nozzle) throws Exception {
+    @Override
+	public void feed(Nozzle nozzle) throws Exception {
         setFeedCount(getFeedCount() + 1);
 
         updateVisionOffsets(nozzle);

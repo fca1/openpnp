@@ -16,11 +16,15 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.Icon;
 
+import org.openpnp.gui.support.PropertySheetWizardAdapter;
+import org.openpnp.machine.reference.vision.wizards.ReferenceBottomVisionConfigurationWizard;
+import org.openpnp.machine.reference.vision.wizards.ReferenceFiducialLocatorWizard;
 import org.openpnp.model.Board;
 import org.openpnp.model.BoardLocation;
 import org.openpnp.model.Configuration;
 import org.openpnp.model.Footprint;
 import org.openpnp.model.Length;
+import org.openpnp.model.LengthUnit;
 import org.openpnp.model.Location;
 import org.openpnp.model.Part;
 import org.openpnp.model.Placement;
@@ -29,10 +33,13 @@ import org.openpnp.spi.Camera;
 import org.openpnp.spi.FiducialLocator;
 import org.openpnp.spi.PropertySheetHolder;
 import org.openpnp.spi.VisionProvider;
+import org.openpnp.spi.PropertySheetHolder.PropertySheet;
 import org.openpnp.spi.VisionProvider.TemplateMatch;
 import org.openpnp.util.IdentifiableList;
 import org.openpnp.util.MovableUtils;
 import org.openpnp.util.Utils2D;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +50,21 @@ import org.slf4j.LoggerFactory;
  */
 @Root
 public class ReferenceFiducialLocator implements FiducialLocator {
-    private static final Logger logger = LoggerFactory.getLogger(ReferenceFiducialLocator.class);
+	
+	
+    @Element(required = false)
+    private Location homeLocation = new Location(LengthUnit.Millimeters);
+
+	
+    public Location getHomeLocation() {
+		return homeLocation;
+	}
+
+	public void setHomeLocation(Location homeLocation) {
+		this.homeLocation = homeLocation;
+	}
+
+	private static final Logger logger = LoggerFactory.getLogger(ReferenceFiducialLocator.class);
 
     public Location locateBoard(BoardLocation boardLocation) throws Exception {
         // Find the fids in the board
@@ -108,7 +129,7 @@ public class ReferenceFiducialLocator implements FiducialLocator {
         // Perform vision operation
         return getBestTemplateMatch(camera, template);
     }
-
+    
     /**
      * Given a placement containing a fiducial, attempt to find the fiducial using the vision
      * system. The function first moves the camera to the ideal location of the fiducial based on
@@ -123,8 +144,11 @@ public class ReferenceFiducialLocator implements FiducialLocator {
      */
     public  Location getHomeFiducialLocation(Location location, Part part )
             throws Exception {
-        Camera camera = Configuration.get().getMachine().getDefaultHead().getDefaultCamera();
+    	return getHomeFiducialLocation(Configuration.get().getMachine().getDefaultHead().getDefaultCamera(),location, part );
+    }
 
+    public Location getHomeFiducialLocation(Camera camera,Location location, Part part )
+            throws Exception {
         org.openpnp.model.Package pkg = part.getPackage();
         if (pkg == null) {
             throw new Exception(
@@ -380,8 +404,8 @@ public class ReferenceFiducialLocator implements FiducialLocator {
 
     @Override
     public PropertySheet[] getPropertySheets() {
-        // TODO Auto-generated method stub
-        return null;
+        return new PropertySheet[] {
+                new PropertySheetWizardAdapter(new ReferenceFiducialLocatorWizard(this))};
     }
 
     @Override

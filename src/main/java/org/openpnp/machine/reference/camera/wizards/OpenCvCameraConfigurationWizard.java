@@ -40,9 +40,9 @@ import com.jgoodies.forms.layout.RowSpec;
 
 @SuppressWarnings("serial")
 public class OpenCvCameraConfigurationWizard extends ReferenceCameraConfigurationWizard {
-    private final OpenCvCamera camera;
+    protected final OpenCvCamera camera;
 
-    private JPanel panelGeneral;
+    protected JPanel panelGeneral;
 
     public OpenCvCameraConfigurationWizard(OpenCvCamera camera) {
         super(camera);
@@ -59,8 +59,12 @@ public class OpenCvCameraConfigurationWizard extends ReferenceCameraConfiguratio
                 FormSpecs.RELATED_GAP_COLSPEC,
                 FormSpecs.DEFAULT_COLSPEC,
                 FormSpecs.RELATED_GAP_COLSPEC,
+                FormSpecs.DEFAULT_COLSPEC,
+                FormSpecs.RELATED_GAP_COLSPEC,
                         FormSpecs.DEFAULT_COLSPEC,},
             new RowSpec[] {
+                    FormSpecs.RELATED_GAP_ROWSPEC,
+                    FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,

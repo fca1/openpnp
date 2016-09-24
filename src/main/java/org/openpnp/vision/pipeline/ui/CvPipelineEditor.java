@@ -28,6 +28,7 @@ import org.openpnp.vision.pipeline.stages.DrawRotatedRects;
 import org.openpnp.vision.pipeline.stages.DrawTemplateMatches;
 import org.openpnp.vision.pipeline.stages.FilterContours;
 import org.openpnp.vision.pipeline.stages.FindContours;
+import org.openpnp.vision.pipeline.stages.GrabCut;
 import org.openpnp.vision.pipeline.stages.HistogramEqualize;
 import org.openpnp.vision.pipeline.stages.ImageCapture;
 import org.openpnp.vision.pipeline.stages.ImageRead;
@@ -42,6 +43,7 @@ import org.openpnp.vision.pipeline.stages.Normalize;
 import org.openpnp.vision.pipeline.stages.ReadModelProperty;
 import org.openpnp.vision.pipeline.stages.Rotate;
 import org.openpnp.vision.pipeline.stages.SetColor;
+import org.openpnp.vision.pipeline.stages.SetLedCamera;
 import org.openpnp.vision.pipeline.stages.SimpleBlobDetector;
 import org.openpnp.vision.pipeline.stages.Threshold;
 
@@ -76,6 +78,7 @@ public class CvPipelineEditor extends JPanel {
         registerStageClass(DrawTemplateMatches.class);
         registerStageClass(FilterContours.class);
         registerStageClass(FindContours.class);
+        registerStageClass(GrabCut.class);
         registerStageClass(HistogramEqualize.class);
         registerStageClass(ImageCapture.class);
         registerStageClass(ImageRead.class);
@@ -91,6 +94,7 @@ public class CvPipelineEditor extends JPanel {
         registerStageClass(Rotate.class);
         registerStageClass(SetColor.class);
         registerStageClass(SimpleBlobDetector.class);
+        registerStageClass(SetLedCamera.class);
         registerStageClass(Threshold.class);
     }
 

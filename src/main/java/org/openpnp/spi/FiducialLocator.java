@@ -13,4 +13,5 @@ import org.openpnp.model.Part;
 public interface FiducialLocator extends PropertySheetHolder {
     public Location locateBoard(BoardLocation boardLocation) throws Exception;
     public Location getHomeFiducialLocation(Location location, Part part ) throws Exception;
+    public Location getHomeFiducialLocation(Camera cam, Location location, Part part ) throws Exception;
 }

@@ -21,7 +21,6 @@ import org.simpleframework.xml.Attribute;
    <cv-stage class="org.openpnp.vision.pipeline.stages.ImageRead" name="0" enabled="true" file="/Users/jason/Projects/openpnp/private/Pictures/Vision Tests/OpenPnP-Bottom_Vision_Test_Images-2016-03-17/13_r45.png"/>
    <cv-stage class="org.openpnp.vision.pipeline.stages.MaskCircle" name="4" enabled="true" diameter="550"/>
    <cv-stage class="org.openpnp.vision.pipeline.stages.ConvertColor" name="5" enabled="true" conversion="Bgr2HsvFull"/>
-   <cv-stage class="org.openpnp.vision.pipeline.stages.MaskHsv" name="6" enabled="true" hue-min="40" hue-max="130" saturation-min="0" saturation-max="255" value-min="0" value-max="255"/>
    <cv-stage class="org.openpnp.vision.pipeline.stages.ConvertColor" name="7" enabled="true" conversion="Hsv2BgrFull"/>
    <cv-stage class="org.openpnp.vision.pipeline.stages.ConvertColor" name="2" enabled="true" conversion="Bgr2Gray"/>
    <cv-stage class="org.openpnp.vision.pipeline.stages.Threshold" name="9" enabled="true" threshold="240" auto="false" invert="false"/>

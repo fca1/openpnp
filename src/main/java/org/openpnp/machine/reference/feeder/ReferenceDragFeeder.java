@@ -312,19 +312,23 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         this.vision = vision;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    @Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    @Override
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    @Override
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    @Override
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 

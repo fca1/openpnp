@@ -742,6 +742,7 @@ public class GcodeDriver extends AbstractSerialPortDriver implements Runnable {
             logger.trace("[{}] >> {}", portName, command);
             output.write(command.getBytes());
             output.write("\n".getBytes());
+            System.err.println("send : "+command);
         }
 
         // Collect responses till we find one with the confirmation or we timeout. Return
@@ -763,6 +764,7 @@ public class GcodeDriver extends AbstractSerialPortDriver implements Runnable {
             }
             // Store the response that was received
             responses.add(response);
+            System.err.println("rcve"+response);
             // If the response is an ok or error we're done
             if (response.matches(getCommand(null, CommandType.COMMAND_CONFIRM_REGEX))) {
                 found = true;

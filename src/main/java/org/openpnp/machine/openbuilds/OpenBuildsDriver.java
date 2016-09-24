@@ -44,11 +44,11 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
     private boolean homeZ = false;
 
     protected double x, y, zA, c, c2;
-    private Thread readerThread;
+    protected Thread readerThread;
     private boolean disconnectRequested;
     private Object commandLock = new Object();
-    private boolean connected;
-    private LinkedBlockingQueue<String> responseQueue = new LinkedBlockingQueue<>();
+    public boolean connected;
+    protected LinkedBlockingQueue<String> responseQueue = new LinkedBlockingQueue<>();
     private boolean n1Picked, n2Picked;
 
     @Override
@@ -75,6 +75,11 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
             }
         }
     }
+    
+    protected synchronized void  connectPrimitive() throws Exception{
+		super.connect();
+	}
+    
 
     @Override
     public void home(ReferenceHead head) throws Exception {
@@ -230,7 +235,7 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
         }
     }
 
-    private double normalizeAngle(double angle) {
+    protected double normalizeAngle(double angle) {
         while (angle > 360) {
             angle -= 360;
         }
@@ -440,6 +445,7 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
             logger.debug(">> " + command);
             output.write(command.getBytes());
             output.write("\n".getBytes());
+            System.err.println(">"+command);
         }
 
         String response = null;
@@ -480,6 +486,8 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
             }
             line = line.trim();
             logger.debug("<< " + line);
+            System.err.println("<< " + line);
+            
             responseQueue.offer(line);
             if (line.startsWith("ok") || line.startsWith("error: ")) {
                 // This is the end of processing for a command
@@ -535,27 +543,27 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
         return new OpenBuildsDriverWizard(this);
     }
 
-    private void n1Vacuum(boolean on) throws Exception {
+    protected void n1Vacuum(boolean on) throws Exception {
         sendCommand(on ? "M800" : "M801");
     }
 
-    private void n1Exhaust(boolean on) throws Exception {
+    protected void n1Exhaust(boolean on) throws Exception {
         sendCommand(on ? "M802" : "M803");
     }
 
-    private void n2Vacuum(boolean on) throws Exception {
+    protected void n2Vacuum(boolean on) throws Exception {
         sendCommand(on ? "M804" : "M805");
     }
 
-    private void n2Exhaust(boolean on) throws Exception {
+    protected void n2Exhaust(boolean on) throws Exception {
         sendCommand(on ? "M806" : "M807");
     }
 
-    private void pump(boolean on) throws Exception {
+    protected void pump(boolean on) throws Exception {
         sendCommand(on ? "M808" : "M809");
     }
 
-    private void led(boolean on) throws Exception {
+    protected void led(boolean on) throws Exception {
         sendCommand(on ? "M810" : "M811");
     }
 }
