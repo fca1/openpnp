@@ -21,6 +21,7 @@ import org.openpnp.model.LengthUnit;
 import org.openpnp.model.Location;
 import org.openpnp.spi.Nozzle;
 import org.openpnp.spi.PropertySheetHolder;
+import org.openpnp.util.Utils2D;
 import org.simpleframework.xml.Attribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +45,11 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
     private boolean homeZ = false;
 
     protected double x, y, zA, c, c2;
-    protected Thread readerThread;
+    private Thread readerThread;
     private boolean disconnectRequested;
     private Object commandLock = new Object();
-    public boolean connected;
-    protected LinkedBlockingQueue<String> responseQueue = new LinkedBlockingQueue<>();
+    private boolean connected;
+    private LinkedBlockingQueue<String> responseQueue = new LinkedBlockingQueue<>();
     private boolean n1Picked, n2Picked;
 
     @Override
@@ -75,11 +76,6 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
             }
         }
     }
-    
-    protected synchronized void  connectPrimitive() throws Exception{
-		super.connect();
-	}
-    
 
     @Override
     public void home(ReferenceHead head) throws Exception {
@@ -135,10 +131,10 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
             z += zCamWheelRadius + zGap;
             int nozzleIndex = getNozzleIndex(nozzle);
             return new Location(LengthUnit.Millimeters, x, y, z,
-                    normalizeAngle(nozzleIndex == 0 ? c : c2)).add(hm.getHeadOffsets());
+                    Utils2D.normalizeAngle(nozzleIndex == 0 ? c : c2)).add(hm.getHeadOffsets());
         }
         else {
-            return new Location(LengthUnit.Millimeters, x, y, zA, normalizeAngle(c))
+            return new Location(LengthUnit.Millimeters, x, y, zA, Utils2D.normalizeAngle(c))
                     .add(hm.getHeadOffsets());
         }
     }
@@ -180,11 +176,11 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
         double oldC = (nozzleIndex == 0 ? this.c : this.c2);
         if (!Double.isNaN(c) && c != oldC) {
             // Normalize the new angle.
-            c = normalizeAngle(c);
+            c = Utils2D.normalizeAngle(c);
 
             // Get the delta between the current position and the new position in normalized
             // degrees.
-            double delta = c - normalizeAngle(oldC);
+            double delta = c - Utils2D.normalizeAngle(oldC);
 
             // If the delta is greater than 180 we'll go the opposite direction instead to
             // minimize travel time.
@@ -233,16 +229,6 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
             sendCommand("G0 " + sb.toString());
             dwell();
         }
-    }
-
-    protected double normalizeAngle(double angle) {
-        while (angle > 360) {
-            angle -= 360;
-        }
-        while (angle < 0) {
-            angle += 360;
-        }
-        return angle;
     }
 
     /**
@@ -445,7 +431,6 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
             logger.debug(">> " + command);
             output.write(command.getBytes());
             output.write("\n".getBytes());
-            System.err.println(">"+command);
         }
 
         String response = null;
@@ -486,8 +471,6 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
             }
             line = line.trim();
             logger.debug("<< " + line);
-            System.err.println("<< " + line);
-            
             responseQueue.offer(line);
             if (line.startsWith("ok") || line.startsWith("error: ")) {
                 // This is the end of processing for a command
@@ -543,27 +526,27 @@ public class OpenBuildsDriver extends AbstractSerialPortDriver implements Runnab
         return new OpenBuildsDriverWizard(this);
     }
 
-    protected void n1Vacuum(boolean on) throws Exception {
+    private void n1Vacuum(boolean on) throws Exception {
         sendCommand(on ? "M800" : "M801");
     }
 
-    protected void n1Exhaust(boolean on) throws Exception {
+    private void n1Exhaust(boolean on) throws Exception {
         sendCommand(on ? "M802" : "M803");
     }
 
-    protected void n2Vacuum(boolean on) throws Exception {
+    private void n2Vacuum(boolean on) throws Exception {
         sendCommand(on ? "M804" : "M805");
     }
 
-    protected void n2Exhaust(boolean on) throws Exception {
+    private void n2Exhaust(boolean on) throws Exception {
         sendCommand(on ? "M806" : "M807");
     }
 
-    protected void pump(boolean on) throws Exception {
+    private void pump(boolean on) throws Exception {
         sendCommand(on ? "M808" : "M809");
     }
 
-    protected void led(boolean on) throws Exception {
+    private void led(boolean on) throws Exception {
         sendCommand(on ? "M810" : "M811");
     }
 }
