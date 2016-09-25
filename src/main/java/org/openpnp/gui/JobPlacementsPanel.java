@@ -29,6 +29,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.openpnp.gui.JobPanel.Message;
+import org.openpnp.gui.JobPanel.State;
 import org.openpnp.gui.components.AutoSelectTextTable;
 import org.openpnp.gui.support.ActionGroup;
 import org.openpnp.gui.support.Helpers;
@@ -37,19 +39,25 @@ import org.openpnp.gui.support.IdentifiableListCellRenderer;
 import org.openpnp.gui.support.IdentifiableTableCellRenderer;
 import org.openpnp.gui.support.MessageBoxes;
 import org.openpnp.gui.support.PartsComboBoxModel;
+import org.openpnp.gui.tablemodel.PackagesTableModel;
 import org.openpnp.gui.tablemodel.PlacementsTableModel;
 import org.openpnp.gui.tablemodel.PlacementsTableModel.Status;
 import org.openpnp.model.Board;
 import org.openpnp.model.Board.Side;
 import org.openpnp.model.BoardLocation;
+import org.openpnp.model.BoardPad;
 import org.openpnp.model.Configuration;
+import org.openpnp.model.Job;
 import org.openpnp.model.Location;
+import org.openpnp.model.Package;
 import org.openpnp.model.Part;
 import org.openpnp.model.Placement;
 import org.openpnp.model.Placement.Type;
 import org.openpnp.spi.Camera;
 import org.openpnp.spi.HeadMountable;
+import org.openpnp.spi.JobProcessor;
 import org.openpnp.spi.Nozzle;
+import org.openpnp.util.FiniteStateMachine;
 import org.openpnp.util.MovableUtils;
 import org.openpnp.util.UiUtils;
 import org.openpnp.util.Utils2D;
@@ -69,18 +77,31 @@ public class JobPlacementsPanel extends JPanel {
     private static Color statusColorWarning = new Color(252, 255, 157);
     private static Color statusColorReady = new Color(157, 255, 168);
     private static Color statusColorError = new Color(255, 157, 157);
+    
+
+    
+
+
+    
+    
+    
 
     public JobPlacementsPanel(JobPanel jobPanel) {
         Configuration configuration = Configuration.get();
+        
+        
+
 
         boardLocationSelectionActionGroup = new ActionGroup(newAction);
         boardLocationSelectionActionGroup.setEnabled(false);
 
         singleSelectionActionGroup =
-                new ActionGroup(removeAction, editPlacementFeederAction, setTypeAction);
+                new ActionGroup(removeAction, editPlacementFeederAction, setTypeAction,processJobActionSelected,setRotationAction);
         singleSelectionActionGroup.setEnabled(false);
+        
+        
 
-        multiSelectionActionGroup = new ActionGroup(removeAction, setTypeAction);
+        multiSelectionActionGroup = new ActionGroup(removeAction, setTypeAction,processJobActionSelected,setRotationAction);
         multiSelectionActionGroup.setEnabled(false);
 
         captureAndPositionActionGroup =
@@ -90,6 +111,8 @@ public class JobPlacementsPanel extends JPanel {
 
         JComboBox<PartsComboBoxModel> partsComboBox = new JComboBox(new PartsComboBoxModel());
         partsComboBox.setRenderer(new IdentifiableListCellRenderer<Part>());
+        
+        
         JComboBox<Side> sidesComboBox = new JComboBox(Side.values());
         JComboBox<Type> typesComboBox = new JComboBox(Type.values());
 
@@ -126,10 +149,25 @@ public class JobPlacementsPanel extends JPanel {
         JButton btnEditFeeder = new JButton(editPlacementFeederAction);
         btnEditFeeder.setHideActionText(true);
         toolBarPlacements.add(btnEditFeeder);
+        
+        
+        toolBarPlacements.addSeparator();
+        JButton btnProcessJobSelected = new JButton(processJobActionSelected);
+        btnProcessJobSelected.setHideActionText(true);
+        toolBarPlacements.add(btnProcessJobSelected);
+
 
         tableModel = new PlacementsTableModel(configuration);
 
-        table = new AutoSelectTextTable(tableModel);
+        table = new AutoSelectTextTable(tableModel)
+        		{
+
+					@Override
+					public String getToolTipText(MouseEvent arg0) {
+						return fillToolTip(arg0);
+					}
+        	
+        		};
         table.setAutoCreateRowSorter(true);
         table.getTableHeader().setDefaultRenderer(new MultisortTableHeaderCellRenderer());
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -166,17 +204,26 @@ public class JobPlacementsPanel extends JPanel {
                 if (mouseEvent.getClickCount() != 2) {
                     return;
                 }
+// FCA if the user double click inside the jobPlacement (Part row)
+// the parts panel appears, with the selected part. It's more easy to change or with an other 
+// double click, find the package associated. 
+
                 int row = table.rowAtPoint(new Point(mouseEvent.getX(), mouseEvent.getY()));
                 int col = table.columnAtPoint(new Point(mouseEvent.getX(), mouseEvent.getY()));
-                if (tableModel.getColumnClass(col) == Status.class) {
-                    Status status = (Status) tableModel.getValueAt(row, col);
-                    // TODO: This is some sample code for handling the user
-                    // wishing to do something with the status. Not using it
-                    // right now but leaving it here for the future.
-                    System.out.println(status);
+                col = table.convertColumnIndexToModel(col);
+            	row = table.convertRowIndexToModel(row);
+                if (tableModel.getColumnClass(1) == Part.class) {
+                    Part  part= (Part) tableModel.getValueAt(row, 1);
+                	MainFrame.get().getPartsTab().showParts(part);
                 }
             }
         });
+        
+        
+        
+        
+        
+        
         table.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -204,12 +251,37 @@ public class JobPlacementsPanel extends JPanel {
             setSideMenu.add(new SetSideAction(side));
         }
         popupMenu.add(setSideMenu);
+        
+        JMenu setRotationMenu = new JMenu(setRotationAction);
+        setRotationMenu.add(new SetRotationAction());
+        popupMenu.add(setRotationMenu);
+
+        table.setComponentPopupMenu(popupMenu);
+
+        
 
         table.setComponentPopupMenu(popupMenu);
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
     }
+
+// FCA permits to show with the toolTipText, the package associated with the part given in the placementPanel. 
+    
+    private String fillToolTip(MouseEvent mouseEvent)
+    {
+        int row = table.rowAtPoint(new Point(mouseEvent.getX(), mouseEvent.getY()));
+        int col = table.columnAtPoint(new Point(mouseEvent.getX(), mouseEvent.getY()));
+        row = table.convertRowIndexToModel(row);
+        col = table.convertColumnIndexToModel(col);
+        
+        if (tableModel.getColumnClass(col) == Part.class) {        		
+        	Part p=(Part)tableModel.getValueAt(row, col);
+    		return "<html><font color=red size=\"4\">" +p.getName() +" height="+p.getPackage().getHeight()+" package ="+p.getPackage()+"</font></html>";
+        }
+     return null;	
+    }
+    
 
     public void setBoardLocation(BoardLocation boardLocation) {
         this.boardLocation = boardLocation;
@@ -383,6 +455,22 @@ public class JobPlacementsPanel extends JPanel {
             MainFrame.get().getFeedersTab().showFeederForPart(placement.getPart());
         }
     };
+    
+    public final Action processJobActionSelected = new AbstractAction() {
+        {
+            putValue(SMALL_ICON, Icons.step);
+            putValue(NAME, "Step");
+            putValue(SHORT_DESCRIPTION, "Process for parts selected.");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            UiUtils.messageBoxOnException(() -> {
+            });
+        }
+    };
+
+    
 
     public final Action setTypeAction = new AbstractAction() {
         {
@@ -437,6 +525,34 @@ public class JobPlacementsPanel extends JPanel {
             }
         }
     };
+    
+    public final Action setRotationAction = new AbstractAction() {
+        {
+            putValue(NAME, "Set Rotation");
+            putValue(SHORT_DESCRIPTION, "Remove rotation more than 180°...");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {}
+    };
+
+    class SetRotationAction extends AbstractAction {
+
+        public SetRotationAction() {
+            putValue(NAME, "Rotation modulo");
+            putValue(SHORT_DESCRIPTION, "Remove rotation more than 180°" );
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            for (Placement placement : getSelections()) {
+            	double rotation = placement.getLocation().getRotation();
+            	rotation%=180;
+            	placement.setLocation(placement.getLocation().derive(null, null, null, rotation));
+            }
+        }
+    };
+
 
     static class TypeRenderer extends DefaultTableCellRenderer {
         public void setValue(Object value) {
@@ -495,4 +611,11 @@ public class JobPlacementsPanel extends JPanel {
             }
         }
     }
-}
+    
+    
+    }
+    
+    
+    
+    
+

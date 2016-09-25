@@ -37,6 +37,7 @@ import org.openpnp.machine.reference.feeder.wizards.ReferenceDragFeederConfigura
 import org.openpnp.model.Configuration;
 import org.openpnp.model.LengthUnit;
 import org.openpnp.model.Location;
+import org.openpnp.model.Part;
 import org.openpnp.model.Rectangle;
 import org.openpnp.spi.Actuator;
 import org.openpnp.spi.Camera;
@@ -79,6 +80,12 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
     protected double feedSpeed = 1.0;
     @Attribute(required = false)
     protected String actuatorName;
+// FCA On the drag feeder of TM240, there are 2 actuator.
+// First is already planned, (the solenoid), the second is the enrollment of plastic reel, (the motor turns a few time)
+// This second actuator must be used for that. (name is : after)
+
+    @Attribute(required = false)
+    protected String actuatorAfterName;
     @Element(required = false)
     protected Vision vision = new Vision();
 
@@ -101,7 +108,7 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
     }
 
     @Override
-    public void feed(Nozzle nozzle) throws Exception {
+    public void feed(Nozzle nozzle,Part part) throws Exception {
         logger.debug("feed({})", nozzle);
 
         if (actuatorName == null) {
@@ -119,6 +126,8 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
          */
 
         Actuator actuator = head.getActuatorByName(actuatorName);
+        Actuator actuatorAfter = head.getActuatorByName(actuatorAfterName);
+
 
         if (actuator == null) {
             throw new Exception(String.format("No Actuator found with name %s on feed Head %s",
@@ -170,9 +179,25 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
 
         head.moveToSafeZ();
 
+        // Retract following vector 
+		// @TODO a partial vector of deplacement is computed (1%), to overflow the position
+		// and return to initial position. Avoid problem of trapping
+
+        Location locEnd = feedEndLocation.subtract(feedStartLocation).multiply(1.01, 1.01, 1d, 1.0).add(feedStartLocation);
+        actuator.moveTo(locEnd, feedSpeed * actuator.getHead().getMachine().getSpeed());
+        actuator.moveTo(feedEndLocation, feedSpeed * actuator.getHead().getMachine().getSpeed());
+        
+        
+        if (actuatorAfter != null)
+    	{
+    	actuatorAfter.actuate(true);
+    	}
+
+
         // retract the pin
         actuator.actuate(false);
 
+  
         if (vision.isEnabled()) {
             visionOffset = getVisionOffsets(head, location);
 
@@ -298,12 +323,23 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         return actuatorName;
     }
 
+    public String getActuatorAfterName() {
+        return actuatorAfterName;
+    }
+
     public void setActuatorName(String actuatorName) {
         String oldValue = this.actuatorName;
         this.actuatorName = actuatorName;
         propertyChangeSupport.firePropertyChange("actuatorName", oldValue, actuatorName);
     }
 
+    public void setActuatorAfterName(String actuatorName) {
+        String oldValue = this.actuatorAfterName;
+        this.actuatorAfterName = actuatorName;
+        propertyChangeSupport.firePropertyChange("actuatorAfterName", oldValue, actuatorName);
+    }
+    
+    
     public Vision getVision() {
         return vision;
     }

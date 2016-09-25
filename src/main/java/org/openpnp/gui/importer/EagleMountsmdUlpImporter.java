@@ -28,7 +28,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -89,58 +93,124 @@ public class EagleMountsmdUlpImporter implements BoardImporter {
         return board;
     }
 
+// FCA special modifications to import the centroid.
+// 1) If there is a problem of import, give the line incriminated. 
+// 1a) show the bad line if a import problem of centroid file. 
+// 2) If the import process is aborted, dont fill the list of packages or parts with a partial results. 
+// 3) Suppress no ascii symbols (like the letter 'u' = micro) 
+// 4) The centroid file parser is not the same
+// @TODO add comments with the lexical data of this new centroid lines. (the goal is to concatenate in same time, 
+// The reference (not friendly readable) of package, with a readable size of package. 
+// Example of line 
+// C1 14.00 16.00   0 ECA0080 CAPAE1350X140N H H_470µF
+// ECA0080 : codification of part (reel)
+// CAPAE1350X140N : Refence package IPC7351 (capa 1.3x5.0mm, 14.0height, N=normal pad)
+// H_470uF  readable human package (Value & package)
+
+
     private static List<Placement> parseFile(File file, Side side, boolean createMissingParts)
             throws Exception {
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+    	
+    	
+    	
+    	LineNumberReader reader =
+                new LineNumberReader(new InputStreamReader(new FileInputStream(file),StandardCharsets.US_ASCII));
+    	// Si il y a une seule erreur, les packages et les parts originaux ne sont pas atteints
         ArrayList<Placement> placements = new ArrayList<>();
+        LinkedHashMap<String, Package> packages_temp = new LinkedHashMap<>();
+        LinkedHashMap<String, Part> parts_temp = new LinkedHashMap<>();
+
         String line;
+        Configuration cfg = Configuration.get();
+        
         while ((line = reader.readLine()) != null) {
             line = line.trim();
+            line = line.replaceAll("[^\\x0A\\x0D\\x20-\\x7E]", "?");
             if (line.length() == 0) {
                 continue;
             }
 
-            // C1 41.91 34.93 180 0.1uF C0805
+            // C1 41.91 34.93 180 0.1uF ERE0001 Capacitor comment
             // T10 21.59 14.22 90 SOT23-BEC
-            // printf("%s %5.2f %5.2f %3.0f %s %s\n",
+            // printf("%s %5.2f %5.2f %3.0f %s %s %s %s\n",
             Pattern pattern = Pattern.compile(
-                    "(\\S+)\\s+(-?\\d+\\.\\d+)\\s+(-?\\d+\\.\\d+)\\s+(-?\\d{1,3})\\s(.*)\\s(.*)");
+                    "(\\S+)\\s+(-?\\d+\\.\\d+)\\s+(-?\\d+\\.\\d+)\\s+(-?\\d{1,3})\\s(\".+\")\\s(\".+\")\\s(\".+\")\\s(\".+\")");
             Matcher matcher = pattern.matcher(line);
-            matcher.matches();
-            Placement placement = new Placement(matcher.group(1));
+            if (matcher.matches()==false)
+            	{
+            	throw new Exception("Pb import line nber "+reader.getLineNumber()+" contents:" +line);
+            	}
+            Placement placement = new Placement(matcher.group(1).replaceAll("\"", ""));
             placement.setLocation(new Location(LengthUnit.Millimeters,
                     Double.parseDouble(matcher.group(2)), Double.parseDouble(matcher.group(3)), 0,
                     Double.parseDouble(matcher.group(4))));
-            Configuration cfg = Configuration.get();
-            if (cfg != null && createMissingParts) {
-                String value = matcher.group(5);
-                String packageId = matcher.group(6);
+            // Recherche d'un part existant.
+            if (cfg != null)
+            	{
+            	String partId = matcher.group(5).replaceAll("\"", "");
+            	String packageId=matcher.group(6).replaceAll("\"", "");
+            	String partComment = matcher.group(8).replaceAll("\"", "");
+            	
+            	Part part = cfg.getPart(partId);
+            	Part part1= parts_temp.get(partId);
+            	if (part1!=null)	// Existe en temporaire, fait semblant que cela vient du global. 
+            		{
+            		part=part1;
+            		}
+            	if (part != null) {
+            			
+            			Package pkg = cfg.getPackage(packageId);
+            			placement.setPart(part);
+            			}
+            	else
+            		{
+                    if (createMissingParts)
+                    	{
+                    	// Creer un part qui devra etre rempli
+                        part = new Part(partId);
+                        part.setName(partComment);
+                        Package pkg = cfg.getPackage(packageId);
+                        Package pkg1 = packages_temp.get(packageId);
+                        if (pkg1!=null)
+                        	{
+                        	pkg = pkg1;
+                        	}
+                        if (pkg == null) {
+                        	String casePackage = matcher.group(7).replaceAll("\"", "");
 
-                String partId = packageId;
-                if (value.trim().length() > 0) {
-                    partId += "-" + value;
-                }
-                Part part = cfg.getPart(partId);
-                if (part == null) {
-                    part = new Part(partId);
-                    Package pkg = cfg.getPackage(packageId);
-                    if (pkg == null) {
-                        pkg = new Package(packageId);
-                        cfg.addPackage(pkg);
-                    }
-                    part.setPackage(pkg);
-
-                    cfg.addPart(part);
-                }
-                placement.setPart(part);
-
+                            pkg = new Package(packageId);
+                            pkg.setDescription(casePackage);
+                            packages_temp.put(packageId, pkg);
+                        // Remplir
+                        	}
+                        part.setPackage(pkg);
+                        parts_temp.put(partId,part);
+            			placement.setPart(part);
+                    	}
+                    else
+                        {
+                    	// Pas de creation de parts ou package "in fly"
+                    	placement.setPart(part);
+                        }
+                    	
+            		}
             }
 
             placement.setSide(side);
             placements.add(placement);
         }
         reader.close();
+        // all is good, copy temporaries list to official list
+		// @TODO use stream for that. 
+        for(String packageId : packages_temp.keySet())
+        	{
+        	cfg.addPackage(packages_temp.get(packageId));
+        	}
+        for(String partId : parts_temp.keySet())
+    	{
+    	cfg.addPart(parts_temp.get(partId));
+    	}
+        
         return placements;
     }
 

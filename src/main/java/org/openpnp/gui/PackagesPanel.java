@@ -21,6 +21,7 @@ package org.openpnp.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -28,6 +29,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.StringReader;
@@ -64,10 +67,12 @@ import org.openpnp.gui.support.Helpers;
 import org.openpnp.gui.support.Icons;
 import org.openpnp.gui.support.MessageBoxes;
 import org.openpnp.gui.tablemodel.PackagesTableModel;
+import org.openpnp.gui.tablemodel.PartsTableModel;
 import org.openpnp.model.Configuration;
 import org.openpnp.model.Package;
 import org.openpnp.model.Part;
 import org.openpnp.spi.Camera;
+import org.openpnp.spi.Feeder;
 import org.simpleframework.xml.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +86,7 @@ public class PackagesPanel extends JPanel {
     private Preferences prefs = Preferences.userNodeForPackage(PackagesPanel.class);
 
     final private Configuration configuration;
-    final private Frame frame;
+    final private MainFrame frame;
 
     private PackagesTableModel tableModel;
     private TableRowSorter<PackagesTableModel> tableSorter;
@@ -90,7 +95,7 @@ public class PackagesPanel extends JPanel {
     private ActionGroup singleSelectionActionGroup;
     private ActionGroup multiSelectionActionGroup;
 
-    public PackagesPanel(Configuration configuration, Frame frame) {
+    public PackagesPanel(Configuration configuration, MainFrame frame) {
         this.configuration = configuration;
         this.frame = frame;
 
@@ -190,6 +195,22 @@ public class PackagesPanel extends JPanel {
         });
 
         table.setRowSorter(tableSorter);
+        table.addMouseListener(new MouseAdapter() {
+// FCA a double click inside a package line permits automatically to show the parts panel with all selected 
+// parts with this same package. 
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	int row =table.getSelectedRow(); 
+            	row = table.convertRowIndexToModel(row);
+            	PackagesTableModel packageModel =(PackagesTableModel) table.getModel();
+            	Package packag = packageModel.getPackage(row);
+                if (e.getClickCount() == 2) {
+                	MainFrame.get().getPartsTab().showPackages(packag);
+                } 
+
+            }
+        });
+
 
         splitPane.setLeftComponent(new JScrollPane(table));
         splitPane.setRightComponent(tabbedPane);
@@ -373,4 +394,22 @@ public class PackagesPanel extends JPanel {
             }
         }
     };
+
+	public void showPackages(Package packag) {
+        frame.showTab("Packages");
+        table.getSelectionModel().clearSelection();
+        for(int row=0;row<tableModel.getRowCount();row++)
+        	{
+        	if (tableModel.getPackage(row)==packag)
+        		{
+        		int vRow = table.convertRowIndexToView(row);
+        		table.getSelectionModel().setSelectionInterval(vRow, vRow);
+        		table.scrollRectToVisible(new Rectangle(table.getCellRect(vRow, 0, true)));
+        		}
+
+        	}
+        }
+
+		
+	
 }

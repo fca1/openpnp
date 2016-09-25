@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 import org.openpnp.gui.support.Wizard;
 import org.openpnp.machine.reference.ReferencePnpJobProcessor.JobPlacement.Status;
 import org.openpnp.machine.reference.wizards.ReferencePnpJobProcessorConfigurationWizard;
@@ -94,7 +95,7 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
         }
 
         public double getPartHeight() {
-            return placement.getPart().getHeight().convertToUnits(LengthUnit.Millimeters)
+            return placement.getPart().getPackage().getHeight().convertToUnits(LengthUnit.Millimeters)
                     .getValue();
         }
 
@@ -297,7 +298,13 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
                 if (placement.getType() != Placement.Type.Place) {
                     continue;
                 }
-
+// FCA here the filter to have only the placement of selected lines in jobPanel. 
+                if (placement.getSteppingUsed()==false)
+                {
+                	continue;
+                }
+                
+                
                 // Ignore placements that aren't on the side of the board we're processing.
                 if (placement.getSide() != boardLocation.getSide()) {
                     continue;
@@ -313,7 +320,7 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
 
                 // Verify that the part height is greater than zero. Catches a common configuration
                 // error.
-                if (placement.getPart().getHeight().getValue() <= 0D) {
+                if (placement.getPart().getPackage().getHeight().getValue() <= 0D) {
                     throw new Exception(String.format("Part height for %s must be greater than 0.",
                             placement.getPart().getId()));
                 }
@@ -518,7 +525,7 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
                             logger.debug("Attempt Feed {} from {} with {}.",
                                     new Object[] {part, feeder, nozzle});
 
-                            feeder.feed(nozzle);
+                            feeder.feed(nozzle,part);
 
                             logger.debug("Fed {} from {} with {}.",
                                     new Object[] {part, feeder, nozzle});
@@ -532,7 +539,8 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
                         // If the feed fails, disable the feeder and continue. If there are no
                         // more valid feeders the findFeeder() call above will throw and exit the
                         // loop.
-                        feeder.setEnabled(false);
+                        //feeder.setEnabled(false);
+                        throw e;
                     }
                 }
                 plannedPlacement.fed = true;
@@ -652,8 +660,8 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
             }
 
             // Add the part's height to the placement location
-            placementLocation = placementLocation.add(new Location(part.getHeight().getUnits(), 0,
-                    0, part.getHeight().getValue(), 0));
+            placementLocation = placementLocation.add(new Location(part.getPackage().getHeight().getUnits(), 0,
+                    0, part.getPackage().getHeight().getValue(), 0));
 
             // Move to the placement location
             MovableUtils.moveToLocationAtSafeZ(nozzle, placementLocation);

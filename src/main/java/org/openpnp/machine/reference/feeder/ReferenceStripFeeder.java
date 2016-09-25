@@ -35,6 +35,7 @@ import org.openpnp.machine.reference.feeder.wizards.ReferenceStripFeederConfigur
 import org.openpnp.model.Length;
 import org.openpnp.model.LengthUnit;
 import org.openpnp.model.Location;
+import org.openpnp.model.Part;
 import org.openpnp.model.Point;
 import org.openpnp.spi.Camera;
 import org.openpnp.spi.Nozzle;
@@ -202,7 +203,7 @@ public class ReferenceStripFeeder extends ReferenceFeeder {
     }
 
     @Override
-	public void feed(Nozzle nozzle) throws Exception {
+	public void feed(Nozzle nozzle,Part part) throws Exception {
         setFeedCount(getFeedCount() + 1);
 
         updateVisionOffsets(nozzle);

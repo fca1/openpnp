@@ -38,11 +38,11 @@ public class PlacementsTableModel extends AbstractTableModel {
     final Configuration configuration;
 
     private String[] columnNames =
-            new String[] {"Id", "Part", "Side", "X", "Y", "ø", "Type", "Status", "Glue", "Check Fids"};
+            new String[] {"Id", "Part", "Side", "X", "Y", "ø", "Type", "Status", "Glue"};
 
     private Class[] columnTypes = new Class[] {PartCellValue.class, Part.class, Side.class,
             LengthCellValue.class, LengthCellValue.class, RotationCellValue.class, Type.class,
-            Status.class, Boolean.class, Boolean.class};
+            Status.class, Boolean.class};
 
     public enum Status {
         Ready,
@@ -61,6 +61,8 @@ public class PlacementsTableModel extends AbstractTableModel {
         this.board = board;
         fireTableDataChanged();
     }
+    
+    
 
     @Override
     public String getColumnName(int column) {
@@ -78,7 +80,7 @@ public class PlacementsTableModel extends AbstractTableModel {
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return columnIndex == 1 || columnIndex == 2 || columnIndex == 3 || columnIndex == 4
-                || columnIndex == 5 || columnIndex == 6 || columnIndex == 8 || columnIndex == 9;
+                || columnIndex == 5 || columnIndex == 6 || columnIndex == 8;
     }
 
     @Override
@@ -124,9 +126,6 @@ public class PlacementsTableModel extends AbstractTableModel {
             else if (columnIndex == 8) {
                 placement.setGlue((Boolean) aValue);
             }
-            else if (columnIndex == 9) {
-                placement.setCheckFids((Boolean) aValue);
-            }
         }
         catch (Exception e) {
             // TODO: dialog, bad input
@@ -142,7 +141,7 @@ public class PlacementsTableModel extends AbstractTableModel {
         if (placement.getType() == Placement.Type.Place) {
             boolean found = false;
             for (Feeder feeder : Configuration.get().getMachine().getFeeders()) {
-                if (feeder.getPart() == placement.getPart() && feeder.isEnabled()) {
+                if (feeder.canHandle(placement.getPart()) && feeder.isEnabled()) {
                     found = true;
                     break;
                 }
@@ -151,7 +150,7 @@ public class PlacementsTableModel extends AbstractTableModel {
                 return Status.MissingFeeder;
             }
 
-            if (placement.getPart().getHeight().getValue() == 0) {
+            if (placement.getPart().getPackage().getHeight().getValue() == 0) {
                 return Status.ZeroPartHeight;
             }
         }
@@ -182,8 +181,6 @@ public class PlacementsTableModel extends AbstractTableModel {
                 return getPlacementStatus(placement);
             case 8:
                 return placement.getGlue();
-            case 9:
-                return placement.getCheckFids();
             default:
                 return null;
         }

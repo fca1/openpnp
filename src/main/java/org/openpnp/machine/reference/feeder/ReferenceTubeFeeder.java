@@ -26,6 +26,7 @@ import org.openpnp.gui.support.Wizard;
 import org.openpnp.machine.reference.ReferenceFeeder;
 import org.openpnp.machine.reference.feeder.wizards.ReferenceFeederConfigurationWizard;
 import org.openpnp.model.Location;
+import org.openpnp.model.Part;
 import org.openpnp.spi.Nozzle;
 import org.openpnp.spi.PropertySheetHolder;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class ReferenceTubeFeeder extends ReferenceFeeder {
     }
 
     @Override
-    public void feed(Nozzle nozzle) throws Exception {}
+    public void feed(Nozzle nozzle,Part part) throws Exception {}
 
     @Override
     public Wizard getConfigurationWizard() {

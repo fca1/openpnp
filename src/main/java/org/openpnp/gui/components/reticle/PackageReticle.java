@@ -36,7 +36,7 @@ public class PackageReticle implements Reticle {
 
     public PackageReticle(org.openpnp.model.Package pkg) {
         setPkg(pkg);
-        setColor(Color.yellow);
+        setColor(Color.red);
     }
 
     public Color getColor() {

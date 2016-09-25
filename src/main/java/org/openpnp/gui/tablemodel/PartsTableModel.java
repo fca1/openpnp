@@ -35,9 +35,13 @@ import org.openpnp.model.Part;
 
 @SuppressWarnings("serial")
 public class PartsTableModel extends AbstractTableModel implements PropertyChangeListener {
+
+// FCA Temporary suppress the showing height, 
+// @TODO put in initial state and change algo, if the height of part is 0, it's the height of package
+// else it's the height of part who is used 
     private String[] columnNames =
-            new String[] {"Id", "Description", "Height", "Package", "Speed %"};
-    private Class[] columnTypes = new Class[] {String.class, String.class, LengthCellValue.class,
+            new String[] {"Id", "Description", "Package", "Speed %"};
+    private Class[] columnTypes = new Class[] {String.class, String.class,
             Package.class, String.class};
     private List<Part> parts;
     private PercentConverter percentConverter = new PercentConverter();
@@ -82,24 +86,9 @@ public class PartsTableModel extends AbstractTableModel implements PropertyChang
                 part.setName((String) aValue);
             }
             else if (columnIndex == 2) {
-                LengthCellValue value = (LengthCellValue) aValue;
-                value.setDisplayNativeUnits(true);
-                Length length = value.getLength();
-                Length oldLength = part.getHeight();
-                if (length.getUnits() == null) {
-                    if (oldLength != null) {
-                        length.setUnits(oldLength.getUnits());
-                    }
-                    if (length.getUnits() == null) {
-                        length.setUnits(Configuration.get().getSystemUnits());
-                    }
-                }
-                part.setHeight(length);
-            }
-            else if (columnIndex == 3) {
                 part.setPackage((Package) aValue);
             }
-            else if (columnIndex == 4) {
+            else if (columnIndex == 3) {
                 part.setSpeed(percentConverter.convertReverse(aValue.toString()));
             }
         }
@@ -116,10 +105,8 @@ public class PartsTableModel extends AbstractTableModel implements PropertyChang
             case 1:
                 return part.getName();
             case 2:
-                return new LengthCellValue(part.getHeight(), true);
-            case 3:
                 return part.getPackage();
-            case 4:
+            case 3:
                 return percentConverter.convertForward(part.getSpeed());
             default:
                 return null;

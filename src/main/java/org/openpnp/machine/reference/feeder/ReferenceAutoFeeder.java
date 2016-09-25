@@ -27,6 +27,7 @@ import org.openpnp.machine.reference.ReferenceFeeder;
 import org.openpnp.machine.reference.feeder.wizards.ReferenceAutoFeederConfigurationWizard;
 import org.openpnp.model.Configuration;
 import org.openpnp.model.Location;
+import org.openpnp.model.Part;
 import org.openpnp.spi.Actuator;
 import org.openpnp.spi.Nozzle;
 import org.openpnp.spi.PropertySheetHolder;
@@ -55,7 +56,7 @@ public class ReferenceAutoFeeder extends ReferenceFeeder {
     }
 
     @Override
-    public void feed(Nozzle nozzle) throws Exception {
+    public void feed(Nozzle nozzle,Part part) throws Exception {
         if (actuatorName == null) {
             logger.warn("No actuatorName specified for feeder.");
             return;

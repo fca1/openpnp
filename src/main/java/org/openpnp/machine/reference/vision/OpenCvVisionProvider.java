@@ -21,6 +21,7 @@ package org.openpnp.machine.reference.vision;
 
 
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -46,6 +47,8 @@ import org.openpnp.spi.VisionProvider;
 import org.openpnp.util.ImageUtils;
 import org.openpnp.util.OpenCvUtils;
 import org.openpnp.util.VisionUtils;
+import org.openpnp.vision.FluentCv;
+import org.openpnp.vision.pipeline.CvStage.Result;
 import org.simpleframework.xml.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,8 +100,27 @@ public class OpenCvVisionProvider implements VisionProvider {
         Mat templateMat = OpenCvUtils.toMat(template);
         Mat imageMat = OpenCvUtils.toMat(image);
         Mat resultMat = new Mat();
+        
+        Mat mask = imageMat.clone();
+        
+//        Mat bw = imageMat.clone();
+//        Imgproc.Canny(imageMat, bw, 0, 50, 5, false);
+//        Imgproc.threshold(bw, imageMat, 400, 255, 0);
 
-        Imgproc.matchTemplate(imageMat, templateMat, resultMat, Imgproc.TM_CCOEFF_NORMED);
+        
+// FCA for test purpose
+        Scalar color = FluentCv.colorToScalar(Color.black);
+        mask.setTo(color);
+        org.opencv.core.Point low=new org.opencv.core.Point(imageMat.cols() / 2-150, imageMat.rows() / 2-150);
+        org.opencv.core.Point high=new org.opencv.core.Point(imageMat.cols() / 2+150, imageMat.rows() / 2+150);
+        Core.rectangle(mask, low,high, new Scalar(255, 255, 255), -1);
+        imageMat.copyTo(resultMat, mask);
+        mask.release();
+
+        
+        
+
+        Imgproc.matchTemplate(resultMat, templateMat, resultMat, Imgproc.TM_CCOEFF_NORMED);
 
         Mat debugMat = null;
         if (logger.isDebugEnabled()) {

@@ -62,10 +62,15 @@ public class ReferenceBottomVision implements PartAlignment {
         // Create a location that is the Camera's X, Y, it's Z + part height
         // and a rotation of 0.
         Location startLocation = camera.getLocation();
-        Length partHeight = part.getHeight();
+        Length partHeight = part.getPackage().getHeight();
         Location partHeightLocation =
                 new Location(partHeight.getUnits(), 0, 0, partHeight.getValue(), 0);
         startLocation = startLocation.add(partHeightLocation).derive(null, null, null, 0d);
+// FCA @TODO operate immediatly a rotation permits to suppress problem of delta(x,y) with an inperfect nozzle
+        if (placementLocation != null)
+        	{
+//        	startLocation = startLocation.addWithRotation(startLocation.derive(0d, 0d, 0d, placementLocation.getRotation()));
+        	}
 
         MovableUtils.moveToLocationAtSafeZ(nozzle, startLocation);
 
@@ -107,7 +112,7 @@ public class ReferenceBottomVision implements PartAlignment {
         CameraView cameraView = MainFrame.get().getCameraViews().getCameraView(camera);
         String s = rect.size.toString() + " " + rect.angle + "°";
         cameraView.showFilteredImage(OpenCvUtils.toBufferedImage(pipeline.getWorkingImage()), s,
-                1500);
+                3000);
 
 
         return new PartAlignmentOffset(offsets,false);

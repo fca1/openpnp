@@ -36,7 +36,8 @@ public class MinAreaRectContours extends CvStage {
         List<RotatedRect> results = new ArrayList<RotatedRect>();
         for (MatOfPoint contour : contours) {
             RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(contour.toArray()));
-            results.add(rect);
+            	results.add(rect);
+            	
         }
         return new Result(null, results);
     }

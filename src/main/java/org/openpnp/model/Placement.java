@@ -69,6 +69,11 @@ public class Placement extends AbstractModelObject implements Identifiable {
     @Attribute
     private boolean checkFids;
 
+// FCA used when set to active the placement of component. 
+    
+    private boolean steppingUsed; 
+    
+
     @SuppressWarnings("unused")
     private Placement() {
         this(null);
@@ -163,9 +168,20 @@ public class Placement extends AbstractModelObject implements Identifiable {
         this.checkFids = checkFids;
         firePropertyChange("check fids", oldValue, checkFids);
     }
+    
+    
+    
 
 
-    @Override
+    public boolean getSteppingUsed() {
+		return steppingUsed;
+	}
+
+	public void setSteppingUsed(boolean steppingUsed) {
+		this.steppingUsed = steppingUsed;
+	}
+
+	@Override
     public String toString() {
         return String.format("id %s, location %s, side %s, part %s, type %s", id, location, side,
                 part, type);

@@ -64,11 +64,15 @@ public class JobPastePanel extends JPanel {
 
         boardLocationSelectionActionGroup = new ActionGroup(newAction);
         boardLocationSelectionActionGroup.setEnabled(false);
+// FCA
+// lot of no polarized parts have a rotation between 180 and 360 degrees.
+// to avoid to have a rotation of part for nothing, add a menu item permits to change the rotation
+// by a modulo 180
 
-        singleSelectionActionGroup = new ActionGroup(removeAction, setTypeAction);
+        singleSelectionActionGroup = new ActionGroup(removeAction, setTypeAction,setRotationAction);
         singleSelectionActionGroup.setEnabled(false);
 
-        multiSelectionActionGroup = new ActionGroup(removeAction, setTypeAction);
+        multiSelectionActionGroup = new ActionGroup(removeAction, setTypeAction,setRotationAction);
         multiSelectionActionGroup.setEnabled(false);
 
         captureAndPositionActionGroup =
@@ -162,6 +166,13 @@ public class JobPastePanel extends JPanel {
             setSideMenu.add(new SetSideAction(side));
         }
         popupMenu.add(setSideMenu);
+        
+        JMenu setRotationMenu = new JMenu(setRotationAction);
+        for (BoardPad.Type type : BoardPad.Type.values()) {
+            setRotationMenu.add(new SetRotationAction(type));
+        }
+        popupMenu.add(setRotationMenu);
+
 
         table.setComponentPopupMenu(popupMenu);
 
@@ -297,6 +308,10 @@ public class JobPastePanel extends JPanel {
             });
         }
     };
+    
+    
+    
+    
 
     public final Action setTypeAction = new AbstractAction() {
         {
@@ -351,6 +366,38 @@ public class JobPastePanel extends JPanel {
             }
         }
     };
+    
+    public final Action setRotationAction = new AbstractAction() {
+        {
+            putValue(NAME, "Set Rotation");
+            putValue(SHORT_DESCRIPTION, "Simplify the rotation with an angle greatest than 180°...");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {}
+    };
+
+    class SetRotationAction extends AbstractAction {
+        final BoardPad.Type type;
+
+        public SetRotationAction(BoardPad.Type type) {
+            this.type = type;
+            putValue(NAME, type.toString());
+            putValue(SHORT_DESCRIPTION, "Set pad type(s) to " + type.toString());
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+        	// Effectue un modulo sur le placement de chaque composant. 
+            for (BoardPad pad : getSelections()) {
+            	// MEUH
+            	double rotation = pad.getLocation().getRotation();
+            	rotation%=180;
+                pad.setLocation(pad.getLocation().derive(null, null, null, rotation));
+            }
+        }
+    };
+
 
     static class TypeRenderer extends DefaultTableCellRenderer {
         public void setValue(Object value) {
@@ -369,3 +416,9 @@ public class JobPastePanel extends JPanel {
         }
     }
 }
+
+
+
+
+
+

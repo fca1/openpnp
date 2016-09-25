@@ -139,6 +139,21 @@ public class OpenCvCamera extends ReferenceCamera implements Runnable {
             e.printStackTrace();
             return;
         }
+// FCA @TODO replace values of enum, use this to avoid automatically brightness. 
+// With electroluminescent looseFeeder, the time of automatic balance is very long..
+// @TODO put this as parameters to wizard box.         
+        final int CV_CAP_PROP_MODE=9; //Backend-specific value indicating the current capture mode.
+        final int CV_CAP_PROP_BRIGHTNESS=10; // Brightness of the image (only for cameras).
+        final int CV_CAP_PROP_CONTRAST=11; // Contrast of the image (only for cameras).
+        final int CV_CAP_PROP_SATURATION=12; // Saturation of the image (only for cameras).
+        final int CV_CAP_PROP_HUE=13; // Hue of the image (only for cameras).
+        final int CV_CAP_PROP_GAIN=14; // Gain of the image (only for cameras).
+        final int CV_CAP_PROP_EXPOSURE=15; // Exposure (only for cameras).
+        // Modifier la lumiere camera
+        fg.set(CV_CAP_PROP_BRIGHTNESS ,0);
+        fg.set(CV_CAP_PROP_EXPOSURE ,0);
+        //fg.set(Highgui.CV_CAP_PROP_SETTINGS ,1);   // For test only, that's work apparently
+        
         thread = new Thread(this);
         thread.start();
     }

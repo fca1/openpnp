@@ -81,6 +81,8 @@ public class ReferenceDragFeederConfigurationWizard
     private JTextField textFieldFeedRate;
     private JLabel lblActuatorId;
     private JTextField textFieldActuatorId;
+    private JLabel lblActuatorAfterId;
+    private JTextField textFieldActuatorAfterId;
     private JPanel panelGeneral;
     private JPanel panelVision;
     private JPanel panelLocations;
@@ -121,8 +123,11 @@ public class ReferenceDragFeederConfigurationWizard
         panelFields.add(panelGeneral);
         panelGeneral.setLayout(new FormLayout(
                 new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
-                        FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,},
+                        FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
+                        FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
+                        },
                 new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
                         FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,}));
 
         JLabel lblFeedRate = new JLabel("Feed Speed %");
@@ -135,10 +140,19 @@ public class ReferenceDragFeederConfigurationWizard
         lblActuatorId = new JLabel("Actuator Name");
         panelGeneral.add(lblActuatorId, "2, 4, right, default");
 
+
         textFieldActuatorId = new JTextField();
         panelGeneral.add(textFieldActuatorId, "4, 4");
         textFieldActuatorId.setColumns(5);
 
+        lblActuatorAfterId = new JLabel("Actuator After Name");
+        panelGeneral.add(lblActuatorAfterId, "2, 6, right, default");
+
+        textFieldActuatorAfterId = new JTextField();
+        panelGeneral.add(textFieldActuatorAfterId, "4, 6");
+        textFieldActuatorAfterId.setColumns(5);
+
+        
         panelLocations = new JPanel();
         panelFields.add(panelLocations);
         panelLocations.setBorder(new TitledBorder(null, "Locations", TitledBorder.LEADING,
@@ -320,6 +334,7 @@ public class ReferenceDragFeederConfigurationWizard
 
         addWrappedBinding(feeder, "feedSpeed", textFieldFeedRate, "text", percentConverter);
         addWrappedBinding(feeder, "actuatorName", textFieldActuatorId, "text");
+        addWrappedBinding(feeder, "actuatorAfterName", textFieldActuatorAfterId, "text");
 
         MutableLocationProxy feedStartLocation = new MutableLocationProxy();
         bind(UpdateStrategy.READ_WRITE, feeder, "feedStartLocation", feedStartLocation, "location");
@@ -350,6 +365,8 @@ public class ReferenceDragFeederConfigurationWizard
 
         ComponentDecorators.decorateWithAutoSelectAndLengthConversion(textFieldFeedRate);
         ComponentDecorators.decorateWithAutoSelect(textFieldActuatorId);
+        ComponentDecorators.decorateWithAutoSelect(textFieldActuatorAfterId);
+        
         ComponentDecorators.decorateWithAutoSelectAndLengthConversion(textFieldFeedStartX);
         ComponentDecorators.decorateWithAutoSelectAndLengthConversion(textFieldFeedStartY);
         ComponentDecorators.decorateWithAutoSelectAndLengthConversion(textFieldFeedStartZ);

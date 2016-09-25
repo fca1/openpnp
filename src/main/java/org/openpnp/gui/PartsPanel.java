@@ -21,7 +21,11 @@ package org.openpnp.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -65,6 +69,7 @@ import org.openpnp.gui.support.WizardContainer;
 import org.openpnp.gui.tablemodel.PartsTableModel;
 import org.openpnp.model.Configuration;
 import org.openpnp.model.Location;
+import org.openpnp.model.Package;
 import org.openpnp.model.Part;
 import org.openpnp.spi.Feeder;
 import org.openpnp.spi.Nozzle;
@@ -73,6 +78,8 @@ import org.openpnp.util.MovableUtils;
 import org.openpnp.util.UiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import nu.pattern.OpenCV;
 
 @SuppressWarnings("serial")
 public class PartsPanel extends JPanel implements WizardContainer {
@@ -83,7 +90,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
     private Preferences prefs = Preferences.userNodeForPackage(PartsPanel.class);
 
     final private Configuration configuration;
-    final private Frame frame;
+    final private MainFrame frame;
 
     private PartsTableModel tableModel;
     private TableRowSorter<PartsTableModel> tableSorter;
@@ -92,7 +99,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
     private ActionGroup singleSelectionActionGroup;
     private ActionGroup multiSelectionActionGroup;
 
-    public PartsPanel(Configuration configuration, Frame frame) {
+    public PartsPanel(Configuration configuration, MainFrame frame) {
         this.configuration = configuration;
         this.frame = frame;
 
@@ -159,7 +166,18 @@ public class PartsPanel extends JPanel implements WizardContainer {
         alignmentPanel.setLayout(new BorderLayout());
         tabbedPane.add("Alignment", new JScrollPane(alignmentPanel));
 
-        table = new AutoSelectTextTable(tableModel);
+        table = new AutoSelectTextTable(tableModel)
+        		{
+
+					@Override
+					public String getToolTipText(MouseEvent event) {
+						return fillToolTip(event);
+					}
+        	
+        		};
+        		
+        		
+        		
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setDefaultEditor(org.openpnp.model.Package.class,
                 new DefaultCellEditor(packagesCombo));
@@ -168,6 +186,25 @@ public class PartsPanel extends JPanel implements WizardContainer {
 
         table.setRowSorter(tableSorter);
         table.getTableHeader().setDefaultRenderer(new MultisortTableHeaderCellRenderer());
+
+// FCA a double click on a line of part permits to show the package panel with the selected package associated with this part. 
+        table.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	int row =table.getSelectedRow(); 
+            	row = table.convertRowIndexToModel(row);
+            	PartsTableModel partModel =(PartsTableModel) table.getModel();
+            	Part part = partModel.getPart(row);
+                if (e.getClickCount() == 2) {
+                	MainFrame.get().getPackagesTab().showPackages(part.getPackage());
+                } 
+
+            }
+        });
+        
+        
+        
         splitPane.setLeftComponent(new JScrollPane(table));
         splitPane.setRightComponent(tabbedPane);
 
@@ -325,7 +362,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
                 Feeder feeder = null;
                 // find a feeder to feed
                 for (Feeder f : Configuration.get().getMachine().getFeeders()) {
-                    if (f.isEnabled() && f.getPart().equals(part)) {
+                    if (f.isEnabled() && f.canHandle(part)) {
                         feeder = f;
                     }
                 }
@@ -333,7 +370,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
                     throw new Exception("No valid feeder found for " + part.getId());
                 }
                 // feed the chosen feeder
-                feeder.feed(nozzle);
+                feeder.feed(nozzle,part);
                 // pick the part
                 Location pickLocation = feeder.getPickLocation();
                 MovableUtils.moveToLocationAtSafeZ(nozzle, pickLocation);
@@ -342,10 +379,58 @@ public class PartsPanel extends JPanel implements WizardContainer {
             });
         }
     };
+    
+    
+    private String fillToolTip(MouseEvent mouseEvent)
+    {
+        int row = table.rowAtPoint(new Point(mouseEvent.getX(), mouseEvent.getY()));
+        int col = table.columnAtPoint(new Point(mouseEvent.getX(), mouseEvent.getY()));
+        row = table.convertRowIndexToModel(row);
+        col = table.convertColumnIndexToModel(col);
+        
+        if (tableModel.getColumnClass(col) == org.openpnp.model.Package.class) {
+        	Package pack = ((org.openpnp.model.Package)tableModel.getValueAt(row, col));
+        	String temp = ((org.openpnp.model.Package)tableModel.getValueAt(row, col)).getDescription();
+        	return "<html><font color=red size=\"4\">" +pack.getDescription() +" " + pack.getHeight()+"</font></html>";
+        }
+     return null;	
+    }
+
+    
 
     @Override
     public void wizardCompleted(Wizard wizard) {}
 
     @Override
     public void wizardCancelled(Wizard wizard) {}
+
+	public void showPackages(Package packag) {
+	        frame.showTab("Parts");
+	        table.getSelectionModel().clearSelection();
+	        for(int row=0;row<tableModel.getRowCount();row++)
+	        	{
+	        	if (tableModel.getPart(row).getPackage()==packag)
+	        		{
+	        		int vRow = table.convertRowIndexToView(row);
+	        		table.getSelectionModel().addSelectionInterval(vRow, vRow);
+	        		table.scrollRectToVisible(new Rectangle(table.getCellRect(vRow, 0, true)));
+	        		}
+
+	        	}
+	        }
+
+	public void showParts(Part part) {
+        frame.showTab("Parts");
+        table.getSelectionModel().clearSelection();
+        for(int row=0;row<tableModel.getRowCount();row++)
+        	{
+        	if (tableModel.getPart(row)==part)
+        		{
+        		int vRow = table.convertRowIndexToView(row);
+        		table.getSelectionModel().setSelectionInterval(vRow, vRow);
+        		table.scrollRectToVisible(new Rectangle(table.getCellRect(vRow, 0, true)));
+        		}
+        	}
+	}
+	
 }

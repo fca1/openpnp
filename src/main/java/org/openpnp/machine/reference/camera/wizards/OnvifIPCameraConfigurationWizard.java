@@ -28,8 +28,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-
-import org.onvif.ver10.schema.VideoResolution;
+// FCA problem with maeven, 
+// @TODO see why the package is not found, 
+import org.onvif.ver10.schema.*;
 import org.openpnp.gui.components.ComponentDecorators;
 import org.openpnp.gui.support.IntegerConverter;
 import org.openpnp.machine.reference.camera.OnvifIPCamera;

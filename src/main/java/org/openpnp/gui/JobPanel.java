@@ -759,7 +759,23 @@ public class JobPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
+        	
             UiUtils.messageBoxOnException(() -> {
+            	//getSelectedBoardLocation()
+// FCA Permits to choose whats part can be placed with the selected line. 
+// The goal is to choose by selected lines in jobplacementPanels, the placed parts for the job.
+// if there is no lines selected, it's the previous behavior, all parts are placed by the job.              	
+            	
+            	for (BoardLocation board : job.getBoardLocations() )  
+            		{
+            		int nberItems = jobPlacementsPanel.getSelections().size();
+            		for (Placement placement : board.getBoard().getPlacements()) {
+            			if (nberItems>=1)
+            				placement.setSteppingUsed(jobPlacementsPanel.getSelections().contains(placement));
+            			else
+            				placement.setSteppingUsed(true);
+            			}
+            		}
                 fsm.send(Message.StartOrPause);
             });
         }
@@ -775,6 +791,10 @@ public class JobPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent arg0) {
             UiUtils.messageBoxOnException(() -> {
+            	for (BoardLocation board : job.getBoardLocations() )  
+        		{
+        		for (Placement placement : board.getBoard().getPlacements()) { placement.setSteppingUsed(jobPlacementsPanel.getSelections().contains(placement)); }
+        		}
                 fsm.send(Message.Step);
             });
         }

@@ -37,7 +37,7 @@ public class Part extends AbstractModelObject implements Identifiable {
     @Attribute
     private LengthUnit heightUnits = LengthUnit.Millimeters;
     @Attribute
-    private double height;
+	private double height;				
 
     private Package packag;
 
@@ -46,6 +46,7 @@ public class Part extends AbstractModelObject implements Identifiable {
 
     @Attribute(required = false)
     private double speed = 1.0;
+
 
 
     @SuppressWarnings("unused")
@@ -61,6 +62,7 @@ public class Part extends AbstractModelObject implements Identifiable {
                 if (getPackage() == null) {
                     setPackage(configuration.getPackage(packageId));
                 }
+                
             }
         });
     }
