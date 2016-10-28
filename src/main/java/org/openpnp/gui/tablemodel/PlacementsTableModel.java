@@ -150,7 +150,7 @@ public class PlacementsTableModel extends AbstractTableModel {
                 return Status.MissingFeeder;
             }
 
-            if (placement.getPart().getPackage().getHeight().getValue() == 0) {
+            if (placement.getPart().getHeight().getValue() == 0) {
                 return Status.ZeroPartHeight;
             }
         }

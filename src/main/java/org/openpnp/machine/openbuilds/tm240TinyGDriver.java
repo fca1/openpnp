@@ -203,7 +203,7 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
         getCurrentPosition();
         limitMachine = new Location(LengthUnit.Millimeters,-999.9,-9999.9,0,0);
         // Home X and Y
-    	Location tmp = new Location(LengthUnit.Millimeters, 69,39, 0.0, 0.0);   //VENOM
+    	Location tmp = new Location(LengthUnit.Millimeters, 69,41, 0.0, 0.0);   //VENOM
     	
     	
     	
@@ -216,7 +216,7 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     		{
     		throw new Exception("Homing fiducial is not detected");
     		}
-    	if (result.getLinearDistanceTo(tmp)>2d)
+    	if (result.getLinearDistanceTo(tmp)>3d)
     		{
     		throw new Exception("Imprecision in homing : ecart"+result.getLinearDistanceTo(tmp));
     		}

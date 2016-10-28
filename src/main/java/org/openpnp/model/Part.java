@@ -19,6 +19,7 @@
 
 package org.openpnp.model;
 
+import org.mozilla.javascript.GeneratedClassLoader;
 import org.openpnp.ConfigurationListener;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.core.Persist;
@@ -98,6 +99,10 @@ public class Part extends AbstractModelObject implements Identifiable {
     }
 
     public Length getHeight() {
+    	if (height==0)
+    		{
+    		return getPackage().getHeight();
+    		}
         return new Length(height, heightUnits);
     }
 

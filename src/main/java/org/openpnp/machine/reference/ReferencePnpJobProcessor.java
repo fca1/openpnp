@@ -95,7 +95,7 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
         }
 
         public double getPartHeight() {
-            return placement.getPart().getPackage().getHeight().convertToUnits(LengthUnit.Millimeters)
+            return placement.getPart().getHeight().convertToUnits(LengthUnit.Millimeters)
                     .getValue();
         }
 
@@ -320,7 +320,7 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
 
                 // Verify that the part height is greater than zero. Catches a common configuration
                 // error.
-                if (placement.getPart().getPackage().getHeight().getValue() <= 0D) {
+                if (placement.getPart().getHeight().getValue() <= 0D) {
                     throw new Exception(String.format("Part height for %s must be greater than 0.",
                             placement.getPart().getId()));
                 }
@@ -660,8 +660,8 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
             }
 
             // Add the part's height to the placement location
-            placementLocation = placementLocation.add(new Location(part.getPackage().getHeight().getUnits(), 0,
-                    0, part.getPackage().getHeight().getValue(), 0));
+            placementLocation = placementLocation.add(new Location(part.getHeight().getUnits(), 0,
+                    0, part.getHeight().getValue(), 0));
 
             // Move to the placement location
             MovableUtils.moveToLocationAtSafeZ(nozzle, placementLocation);

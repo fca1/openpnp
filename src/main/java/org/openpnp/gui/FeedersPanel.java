@@ -476,7 +476,7 @@ public class FeedersPanel extends JPanel implements WizardContainer {
         	Part p = tableModel.getFeeder(row).getPart();
         	if (p!=null)
         		{
-        		return "<html><font color=red size=\"4\">" +p.getName() +" height="+p.getPackage().getHeight()+" package ="+p.getPackage()+"</font></html>";
+        		return "<html><font color=red size=\"4\">" +p.getName() +" height="+p.getHeight()+" package ="+p.getPackage()+"</font></html>";
         		}
         }
      return null;	

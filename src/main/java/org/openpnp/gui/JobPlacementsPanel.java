@@ -277,7 +277,7 @@ public class JobPlacementsPanel extends JPanel {
         
         if (tableModel.getColumnClass(col) == Part.class) {        		
         	Part p=(Part)tableModel.getValueAt(row, col);
-    		return "<html><font color=red size=\"4\">" +p.getName() +" height="+p.getPackage().getHeight()+" package ="+p.getPackage()+"</font></html>";
+    		return "<html><font color=red size=\"4\">" +p.getName() +" height="+p.getHeight()+" package ="+p.getPackage()+"</font></html>";
         }
      return null;	
     }
