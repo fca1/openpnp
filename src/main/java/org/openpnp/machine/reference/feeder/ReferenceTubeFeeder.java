@@ -29,15 +29,13 @@ import org.openpnp.model.Location;
 import org.openpnp.model.Part;
 import org.openpnp.spi.Nozzle;
 import org.openpnp.spi.PropertySheetHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of Feeder that always picks from the same location. This can be used with a
  * gravity feed or vibratory tube feeder.
  */
 public class ReferenceTubeFeeder extends ReferenceFeeder {
-    private final static Logger logger = LoggerFactory.getLogger(ReferenceTubeFeeder.class);
+
 
     @Override
     public Location getPickLocation() throws Exception {
@@ -62,12 +60,6 @@ public class ReferenceTubeFeeder extends ReferenceFeeder {
         // TODO Auto-generated method stub
         return null;
     }
-
-    @Override
-    public PropertySheet[] getPropertySheets() {
-        return new PropertySheet[] {new PropertySheetWizardAdapter(getConfigurationWizard())};
-    }
-
     @Override
     public Action[] getPropertySheetHolderActions() {
         // TODO Auto-generated method stub

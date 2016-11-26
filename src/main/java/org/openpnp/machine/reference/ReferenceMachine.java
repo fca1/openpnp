@@ -57,12 +57,11 @@ import org.openpnp.spi.PnpJobProcessor;
 import org.openpnp.spi.PropertySheetHolder;
 import org.openpnp.spi.base.AbstractMachine;
 import org.openpnp.spi.base.SimplePropertySheetHolder;
+import org.pmw.tinylog.Logger;
 import org.simpleframework.xml.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ReferenceMachine extends AbstractMachine {
-    private static Logger logger = LoggerFactory.getLogger(ReferenceMachine.class);
+
 
     @Element(required = false)
     private ReferenceDriver driver = new NullDriver();
@@ -107,7 +106,7 @@ public class ReferenceMachine extends AbstractMachine {
 
     @Override
     public void setEnabled(boolean enabled) throws Exception {
-        logger.debug("setEnabled({})", enabled);
+        Logger.debug("setEnabled({})", enabled);
         if (enabled) {
             try {
                 driver.setEnabled(true);
@@ -206,7 +205,7 @@ public class ReferenceMachine extends AbstractMachine {
 
     @Override
     public void home() throws Exception {
-        logger.debug("home");
+        Logger.debug("home");
         super.home();
     }
 

@@ -75,6 +75,8 @@ public interface Feeder extends Identifiable, Named, WizardConfigurable, Propert
      */
 	public void feed(Nozzle nozzle, Part part) throws Exception; 
 
+
+    public void postPick(Nozzle nozzle) throws Exception;
     
     public int getRetryCount();
 

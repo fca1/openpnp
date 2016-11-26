@@ -45,8 +45,6 @@ import org.openpnp.util.Utils2D;
 import org.openpnp.vision.FluentCv;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -70,7 +68,7 @@ import org.slf4j.LoggerFactory;
  * hole to part lateral is tape width / 2 - 0.5mm
  */
 public class ReferenceStripFeeder extends ReferenceFeeder {
-    private final static Logger logger = LoggerFactory.getLogger(ReferenceStripFeeder.class);
+
 
     public enum TapeType {
         WhitePaper("White Paper"),
@@ -413,11 +411,6 @@ public class ReferenceStripFeeder extends ReferenceFeeder {
     public PropertySheetHolder[] getChildPropertySheetHolders() {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public PropertySheet[] getPropertySheets() {
-        return new PropertySheet[] {new PropertySheetWizardAdapter(getConfigurationWizard())};
     }
 
     @Override

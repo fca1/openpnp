@@ -29,7 +29,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -78,8 +77,6 @@ import org.openpnp.spi.MachineListener;
 import org.openpnp.util.FiniteStateMachine;
 import org.openpnp.util.MovableUtils;
 import org.openpnp.util.UiUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
 public class JobPanel extends JPanel {
@@ -97,7 +94,7 @@ public class JobPanel extends JPanel {
     }
 
     @SuppressWarnings("unused")
-    private static final Logger logger = LoggerFactory.getLogger(JobPanel.class);
+
     
     final private Configuration configuration;
     final private MainFrame frame;
@@ -653,7 +650,7 @@ public class JobPanel extends JPanel {
         }
         else if (title.equals("Pick and Place"))
         {
-            if(jobProcessor == null || jobProcessor == Configuration.get().getMachine().getPnpJobProcessor())
+            if((jobProcessor == null || jobProcessor == Configuration.get().getMachine().getPnpJobProcessor()) && (Configuration.get().getMachine().getGlueDispenseJobProcessor()!=null))
             {
                // Run the glue dispense processor first, this will deposit glue ready for any component placements
                 jobProcessor = Configuration.get().getMachine().getGlueDispenseJobProcessor();
@@ -685,7 +682,7 @@ public class JobPanel extends JPanel {
             } while (fsm.getState() == State.Running);
 
             // if this was the glue dispense run and we've finished, kick off the pick & place
-            if(jobProcessor==Configuration.get().getMachine().getGlueDispenseJobProcessor()) {
+            if(Configuration.get().getMachine().getGlueDispenseJobProcessor()!=null && jobProcessor==Configuration.get().getMachine().getGlueDispenseJobProcessor()) {
                 fsm.send(Message.StartOrPause);
             }
             return null;

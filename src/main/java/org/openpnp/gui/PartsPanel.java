@@ -76,20 +76,20 @@ import org.openpnp.spi.Nozzle;
 import org.openpnp.spi.PartAlignment;
 import org.openpnp.util.MovableUtils;
 import org.openpnp.util.UiUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.pmw.tinylog.Logger;
 
 import nu.pattern.OpenCV;
 
 @SuppressWarnings("serial")
 public class PartsPanel extends JPanel implements WizardContainer {
-    private final static Logger logger = LoggerFactory.getLogger(PartsPanel.class);
+
 
     private static final String PREF_DIVIDER_POSITION = "PartsPanel.dividerPosition";
     private static final int PREF_DIVIDER_POSITION_DEF = -1;
     private Preferences prefs = Preferences.userNodeForPackage(PartsPanel.class);
 
     final private Configuration configuration;
+    
     final private MainFrame frame;
 
     private PartsTableModel tableModel;
@@ -99,6 +99,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
     private ActionGroup singleSelectionActionGroup;
     private ActionGroup multiSelectionActionGroup;
 
+    
     public PartsPanel(Configuration configuration, MainFrame frame) {
         this.configuration = configuration;
         this.frame = frame;
@@ -166,6 +167,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
         alignmentPanel.setLayout(new BorderLayout());
         tabbedPane.add("Alignment", new JScrollPane(alignmentPanel));
 
+    
         table = new AutoSelectTextTable(tableModel)
         		{
 
@@ -277,7 +279,8 @@ public class PartsPanel extends JPanel implements WizardContainer {
             rf = RowFilter.regexFilter("(?i)" + searchTextField.getText().trim());
         }
         catch (PatternSyntaxException e) {
-            logger.warn("Search failed", e);
+    
+            Logger.warn("Search failed", e);
             return;
         }
         tableSorter.setRowFilter(rf);
@@ -362,6 +365,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
                 Feeder feeder = null;
                 // find a feeder to feed
                 for (Feeder f : Configuration.get().getMachine().getFeeders()) {
+    
                     if (f.isEnabled() && f.canHandle(part)) {
                         feeder = f;
                     }
@@ -370,6 +374,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
                     throw new Exception("No valid feeder found for " + part.getId());
                 }
                 // feed the chosen feeder
+    
                 feeder.feed(nozzle,part);
                 // pick the part
                 Location pickLocation = feeder.getPickLocation();

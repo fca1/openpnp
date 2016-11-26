@@ -72,20 +72,20 @@ import org.openpnp.model.Configuration;
 import org.openpnp.model.Package;
 import org.openpnp.model.Part;
 import org.openpnp.spi.Camera;
+import org.pmw.tinylog.Logger;
 import org.openpnp.spi.Feeder;
 import org.simpleframework.xml.Serializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
 public class PackagesPanel extends JPanel {
-    private final static Logger logger = LoggerFactory.getLogger(PackagesPanel.class);
+
 
     private static final String PREF_DIVIDER_POSITION = "PackagesPanel.dividerPosition";
     private static final int PREF_DIVIDER_POSITION_DEF = -1;
     private Preferences prefs = Preferences.userNodeForPackage(PackagesPanel.class);
 
     final private Configuration configuration;
+    
     final private MainFrame frame;
 
     private PackagesTableModel tableModel;
@@ -95,6 +95,7 @@ public class PackagesPanel extends JPanel {
     private ActionGroup singleSelectionActionGroup;
     private ActionGroup multiSelectionActionGroup;
 
+    
     public PackagesPanel(Configuration configuration, MainFrame frame) {
         this.configuration = configuration;
         this.frame = frame;
@@ -262,7 +263,8 @@ public class PackagesPanel extends JPanel {
             rf = RowFilter.regexFilter("(?i)" + searchTextField.getText().trim());
         }
         catch (PatternSyntaxException e) {
-            logger.warn("Search failed", e);
+    
+            Logger.warn("Search failed", e);
             return;
         }
         tableSorter.setRowFilter(rf);

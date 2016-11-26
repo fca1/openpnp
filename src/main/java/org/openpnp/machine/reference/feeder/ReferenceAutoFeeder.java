@@ -31,9 +31,8 @@ import org.openpnp.model.Part;
 import org.openpnp.spi.Actuator;
 import org.openpnp.spi.Nozzle;
 import org.openpnp.spi.PropertySheetHolder;
+import org.pmw.tinylog.Logger;
 import org.simpleframework.xml.Attribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Not yet finished feeder that will be used for automated feeding. Just getting the idea down
@@ -42,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public class ReferenceAutoFeeder extends ReferenceFeeder {
-    private final static Logger logger = LoggerFactory.getLogger(ReferenceAutoFeeder.class);
+
 
     @Attribute(required=false)
     protected String actuatorName;
@@ -58,7 +57,7 @@ public class ReferenceAutoFeeder extends ReferenceFeeder {
     @Override
     public void feed(Nozzle nozzle,Part part) throws Exception {
         if (actuatorName == null) {
-            logger.warn("No actuatorName specified for feeder.");
+            Logger.warn("No actuatorName specified for feeder.");
             return;
         }
         Actuator actuator = nozzle.getHead().getActuatorByName(actuatorName);
@@ -101,11 +100,6 @@ public class ReferenceAutoFeeder extends ReferenceFeeder {
     public PropertySheetHolder[] getChildPropertySheetHolders() {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public PropertySheet[] getPropertySheets() {
-        return new PropertySheet[] {new PropertySheetWizardAdapter(getConfigurationWizard())};
     }
 
     @Override
