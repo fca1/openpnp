@@ -1,0 +1,199 @@
+<openpnp-packages>
+   <package id="FIDUCIAL-1X2" description="Board fiducial (dont remove)" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0">
+         <pad name="1" x="0.0" y="0.0" width="1.0" height="1.0" rotation="0.0" roundness="100.0"/>
+      </footprint>
+   </package>
+   <package id="RESC1608N" description="R0603" height-units="Millimeters" height="0.75">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="1.6" body-height="0.8">
+         <pad name="1" x="-0.8" y="0.0" width="1.6" height="1.5" rotation="90.0" roundness="0.0"/>
+         <pad name="2" x="0.8" y="0.0" width="1.6" height="1.5" rotation="90.0" roundness="0.0"/>
+      </footprint>
+   </package>
+   <package id="PACK_FIDUC_HOME" description="Home fiducial (dont remove)" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0">
+         <pad name="1" x="0.0" y="0.0" width="0.9" height="0.9" rotation="0.0" roundness="100.0"/>
+      </footprint>
+   </package>
+   <package id="SOT95P280X135-3N" description="SOT23-3" height-units="Millimeters" height="1.35">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="2.9" body-height="2.4"/>
+   </package>
+   <package id="DIOM5326X292N" description="DIODE SMA" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="5.3" body-height="2.6"/>
+   </package>
+   <package id="SOT95P320X310-5" description="SOT23-5" height-units="Millimeters" height="3.1">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="2.1" body-height="1.5"/>
+   </package>
+   <package id="CAPC1608X92N" description="C0603" height-units="Millimeters" height="0.75">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="1.6" body-height="0.75"/>
+   </package>
+   <package id="QFP65P670XHH-28" description="QFN28" height-units="Millimeters" height="0.75">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="4.0" body-height="4.0"/>
+   </package>
+   <package id="CAPC1005X60N" description="C0402" height-units="Millimeters" height="0.6">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.8" body-height="0.4"/>
+   </package>
+   <package id="CAPC2012X145AN" description="C0805" height-units="Millimeters" height="1.45">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="2.0" body-height="1.2"/>
+   </package>
+   <package id="CAPC3225X168N" description="C1210" height-units="Millimeters" height="1.6">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="3.2" body-height="2.5"/>
+   </package>
+   <package id="CAPMP7343X310N" description="D" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="7.3" body-height="4.3"/>
+   </package>
+   <package id="CAPAE660X540N" description="D" height-units="Millimeters" height="5.4">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="DIOM5326XHHN-2" description="DO-221BC" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="5.3" body-height="2.6"/>
+   </package>
+   <package id="SOT095P300XHH-6" description="SOT23-6L" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="SOD3718X135N" description="SOD-123" height-units="Millimeters" height="1.35">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="3.7" body-height="1.6"/>
+   </package>
+   <package id="INDC3216X135N" description="L1206" height-units="Millimeters" height="1.35">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="3.2" body-height="1.6"/>
+   </package>
+   <package id="INDC1608X95N" description="L0603" height-units="Millimeters" height="0.8">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="1.6" body-height="0.8"/>
+   </package>
+   <package id="INDC5750X180N" description="L2220" height-units="Millimeters" height="1.8">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="5.7" body-height="5.0"/>
+   </package>
+   <package id="SOP95P300XHH-6N" description="SOT457" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="QFP50P1600X1600XHH-100" description="LQFP-100" height-units="Millimeters" height="1.5">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="15.0" body-height="15.0"/>
+   </package>
+   <package id="SOP65P640XHH-20TP-CB" description="TSSOP-20" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="SOP50P490XHH-16TP" description="MSOP" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="SOP95P280XHH-5" description="DBV" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="SOP50P660XHH-38" description="DBT" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="SOP127P620XHH-8" description="SOIC-8" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="5.2" body-height="5.8"/>
+   </package>
+   <package id="SOP65P490XX-8" description="TSSOP-8" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="SOP65P640XHH-16TP" description="TSSOP-16" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="5.1" body-height="4.4"/>
+   </package>
+   <package id="CAPAE1350X140N" description="H" height-units="Millimeters" height="14.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="1.3" body-height="5.0"/>
+   </package>
+   <package id="SOD410X120N" description="SOD-123F" height-units="Millimeters" height="1.2">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="2.5" body-height="1.2"/>
+   </package>
+   <package id="WE_HCI-1890" description="HCI-1890" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="SOT1210" description="LFPAK33" height-units="Millimeters" height="1.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="3.4" body-height="3.4"/>
+   </package>
+   <package id="RESC3115N" description="1206" height-units="Millimeters" height="0.5">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="3.1" body-height="1.5"/>
+   </package>
+   <package id="SOP65P640X120-20TP" description="TSSOP-20" height-units="Millimeters" height="1.2">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="6.6" body-height="6.4"/>
+   </package>
+   <package id="FIDUCIAL-D2" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0">
+         <pad name="FIDUC1" x="0.0" y="0.0" width="2.0" height="2.0" rotation="0.0" roundness="100.0"/>
+      </footprint>
+   </package>
+   <package id="WE_65100516121" description="Mini USB" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="WE_74980111211" description="QFN48" height-units="Millimeters" height="0.8">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="INDC1005X60N" description="0402" height-units="Millimeters" height="0.5">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.8" body-height="0.5"/>
+   </package>
+   <package id="IND_NR8040" description="POWER_INDUCTOR" height-units="Millimeters" height="4.2">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="SOP127P700H200-8" description="SOP8" height-units="Millimeters" height="2.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="6.7" body-height="5.1"/>
+   </package>
+   <package id="OMRON_G6S-2F" description="??" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="DFN800X600X75-8" description="DFN8" height-units="Millimeters" height="0.75">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="8.0" body-height="6.0"/>
+   </package>
+   <package id="HTSSOP-16" description="HTSSOP16" height-units="Millimeters" height="1.6">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="4.5" body-height="5.0"/>
+   </package>
+   <package id="SF-BLUEGIGA_BLE112-A" description="ModuleBLE" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="QFN50P700X700X80-48+TP" description="??" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="7.0" body-height="7.0"/>
+   </package>
+   <package id="AP4" description="AP4" height-units="Millimeters" height="1.5">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="3.0" body-height="2.0"/>
+   </package>
+   <package id="CAPAE1030X1020N" description="G" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+</openpnp-packages>

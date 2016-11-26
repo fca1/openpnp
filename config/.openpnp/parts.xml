@@ -1,0 +1,88 @@
+<openpnp-parts>
+   <part id="FIDUCIAL-1X2-FIDUCIAL1X2" name="FIDUCIAL" height-units="Millimeters" height="0.0" package-id="FIDUCIAL-D2" speed="1.0"/>
+   <part id="FIDUCIAL-HOME" height-units="Millimeters" height="0.0" package-id="PACK_FIDUC_HOME" speed="1.0"/>
+   <part id="ERE0001" name="R0603 1K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0002" name="R0603 10K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0003" name="R0603 4.7K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0004" name="R0603 47K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ECA0080" name="H_470uF" height-units="Millimeters" height="0.0" package-id="CAPAE1350X140N" speed="1.0"/>
+   <part id="ECA0004" name="0603_10nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0027" name="1210_22uF" height-units="Millimeters" height="0.0" package-id="CAPC3225X168N" speed="1.0"/>
+   <part id="ECA0022" name="1210_10uF" height-units="Millimeters" height="0.0" package-id="CAPC3225X168N" speed="1.0"/>
+   <part id="ECA0001" name="0603_100nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0010" name="0603_220nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0007" name="D_47uF" height-units="Millimeters" height="0.0" package-id="CAPAE660X540N" speed="1.0"/>
+   <part id="ECA0023" name="D_100uF" height-units="Millimeters" height="0.0" package-id="CAPAE660X540N" speed="1.0"/>
+   <part id="ECA0053" name="0603_100pF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0054" name="0603_1nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0055" name="0603_10nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0056" name="0603_100nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="0.1"/>
+   <part id="EDI0008" name="SOD-123F_" height-units="Millimeters" height="0.0" package-id="SOD410X120N" speed="1.0"/>
+   <part id="EIN0062" name="HCI-1890_22uH" height-units="Millimeters" height="0.0" package-id="WE_HCI-1890" speed="1.0"/>
+   <part id="EIN0020" name="2220_100R@100Mhz" height-units="Millimeters" height="0.0" package-id="INDC5750X180N" speed="1.0"/>
+   <part id="FIDUCIAL" name="_FIDUCIAL" height-units="Millimeters" height="0.0" package-id="FIDUCIAL-D2" speed="1.0"/>
+   <part id="ETR0006" name="LFPAK33_30V/70A" height-units="Millimeters" height="0.0" package-id="SOT1210" speed="1.0"/>
+   <part id="ERE0038" name="1206_0.01R" height-units="Millimeters" height="0.0" package-id="RESC3115N" speed="1.0"/>
+   <part id="ERE0066" name="0603_200K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0008" name="0603_10R" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0005" name="0603_0R" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="EIC0017" name="TSSOP-20_" height-units="Millimeters" height="0.0" package-id="SOP65P640X120-20TP" speed="0.1"/>
+   <part id="EIC0053" name="SN65HVD231" height-units="Millimeters" height="0.0" package-id="SOP127P620XHH-8" speed="1.0"/>
+   <part id="ECO0005" name="Mini USB_USB-5P0005_65100516121" height-units="Millimeters" height="0.0" package-id="WE_65100516121" speed="1.0"/>
+   <part id="ECO0113" name="??_74980111211" height-units="Millimeters" height="0.0" package-id="WE_74980111211" speed="1.0"/>
+   <part id="EDI0001" name="SOD-123_BAT42W" height-units="Millimeters" height="0.0" package-id="SOD3718X135N" speed="1.0"/>
+   <part id="EIC0105" name="LQFP-100_R5F5630ADCP" height-units="Millimeters" height="0.0" package-id="QFP50P1600X1600XHH-100" speed="0.1"/>
+   <part id="EIN0019" name="0402_33nH" height-units="Millimeters" height="0.0" package-id="INDC1005X60N" speed="1.0"/>
+   <part id="EIN0016" name="0402_10nH" height-units="Millimeters" height="0.0" package-id="INDC1005X60N" speed="1.0"/>
+   <part id="EIN0070" name="0402_8.2nH" height-units="Millimeters" height="0.0" package-id="INDC1005X60N" speed="1.0"/>
+   <part id="EIN0069" name="0402_7.5nH" height-units="Millimeters" height="0.0" package-id="INDC1005X60N" speed="1.0"/>
+   <part id="EIN0015" name="??_47uH" height-units="Millimeters" height="0.0" package-id="IND_NR8040" speed="1.0"/>
+   <part id="EOP0005" name="??_ACPL-227" height-units="Millimeters" height="0.0" package-id="SOP127P700H200-8" speed="0.1"/>
+   <part id="ETR0011" name="SOT-23_MOSFET-NCH_0011_SOT-23" height-units="Millimeters" height="0.0" package-id="SOT95P280X135-3N" speed="1.0"/>
+   <part id="ERE0031" name="0603_22R" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0061" name="0603_1.5K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0039" name="0603_220R" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0070" name="0603_220K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0028" name="0603_100K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0012" name="0603_270R" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0025" name="0603_33K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0033" name="0603_1M" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0096" name="0603_442K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0107" name="0603_750K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0108" name="0603_150K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0095" name="0603_4.87K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0085" name="0603_49.9R" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERL0006" name="??_G6S-2F-TR 12DC" height-units="Millimeters" height="0.0" package-id="OMRON_G6S-2F" speed="1.0"/>
+   <part id="EIC0102" name="DFN_MT25QL512ABB3EW9" height-units="Millimeters" height="0.0" package-id="DFN800X600X75-8" speed="1.0"/>
+   <part id="EIC0055" name="SOT23-5_LMV321" height-units="Millimeters" height="0.0" package-id="SOT95P320X310-5" speed="1.0"/>
+   <part id="EIC0045" name="HTSSOP16_LM46002P" height-units="Millimeters" height="0.0" package-id="HTSSOP-16" speed="0.05"/>
+   <part id="EMO0007" name="LGA_BLE112A" height-units="Millimeters" height="0.0" package-id="SF-BLUEGIGA_BLE112-A" speed="1.0"/>
+   <part id="EIC0100" name="??_DP83620" height-units="Millimeters" height="0.0" package-id="QFN50P700X700X80-48+TP" speed="1.0"/>
+   <part id="EQZ0007" name="AP4_12Mhz" height-units="Millimeters" height="0.0" package-id="AP4" speed="0.1"/>
+   <part id="LOC0001" name="FIDUCIAL_1MM" height-units="Millimeters" height="0.0" package-id="FIDUCIAL-1X2" speed="1.0"/>
+   <part id="ECA0093" name="0603_1uF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0042" name="0402_12pF" height-units="Millimeters" height="0.0" package-id="CAPC1005X60N" speed="1.0"/>
+   <part id="ECA0008" name="0805_10uF" height-units="Millimeters" height="0.0" package-id="CAPC2012X145AN" speed="1.0"/>
+   <part id="ECA0058" name="0603_22nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0068" name="1210_47uF" height-units="Millimeters" height="0.0" package-id="CAPC3225X168N" speed="1.0"/>
+   <part id="ECA0028" name="0603_470nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0045" name="0402_100nF" height-units="Millimeters" height="0.0" package-id="CAPC1005X60N" speed="1.0"/>
+   <part id="ECA0073" name="0402_10nF" height-units="Millimeters" height="0.0" package-id="CAPC1005X60N" speed="1.0"/>
+   <part id="ECA0049" name="0402_1.5pF" height-units="Millimeters" height="0.0" package-id="CAPC1005X60N" speed="1.0"/>
+   <part id="ECA0048" name="0402_47pF" height-units="Millimeters" height="0.0" package-id="CAPC1005X60N" speed="1.0"/>
+   <part id="ECA0063" name="0402_100nF" height-units="Millimeters" height="0.0" package-id="CAPC1005X60N" speed="1.0"/>
+   <part id="ECA0101" name="0402_33pF" height-units="Millimeters" height="0.0" package-id="CAPC1005X60N" speed="1.0"/>
+   <part id="ECA0100" name="0402_4.7pF" height-units="Millimeters" height="0.0" package-id="CAPC1005X60N" speed="1.0"/>
+   <part id="ECA0040" name="G_100uF" height-units="Millimeters" height="0.0" package-id="CAPAE1030X1020N" speed="1.0"/>
+   <part id="ECA0033" name="0603_2.2uF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0039" name="1210_4.7uF" height-units="Millimeters" height="0.0" package-id="CAPC3225X168N" speed="1.0"/>
+   <part id="ECA0019" name="0603_18pF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0014" name="1210_47uF" height-units="Millimeters" height="0.0" package-id="CAPC3225X168N" speed="1.0"/>
+   <part id="ECA0098" name="0603_1uF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0099" name="0603_100nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0097" name="0603_220nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0102" name="1210_22uF" height-units="Millimeters" height="0.0" package-id="CAPC3225X168N" speed="1.0"/>
+   <part id="ECA0140" name="0805_680nF" height-units="Millimeters" height="0.0" package-id="CAPC2012X145AN" speed="1.0"/>
+   <part id="ECA0103" name="0805_470nF" height-units="Millimeters" height="0.0" package-id="CAPC2012X145AN" speed="1.0"/>
+   <part id="ECA0002" name="0603_1nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+</openpnp-parts>
