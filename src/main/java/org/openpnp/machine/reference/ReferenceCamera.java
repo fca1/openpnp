@@ -22,6 +22,8 @@ package org.openpnp.machine.reference;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -37,7 +39,6 @@ import org.openpnp.model.Configuration;
 import org.openpnp.model.Length;
 import org.openpnp.model.LengthUnit;
 import org.openpnp.model.Location;
-import org.openpnp.spi.PropertySheetHolder.PropertySheet;
 import org.openpnp.spi.base.AbstractCamera;
 import org.openpnp.util.OpenCvUtils;
 import org.openpnp.vision.LensCalibration;
@@ -99,7 +100,7 @@ public abstract class ReferenceCamera extends AbstractCamera implements Referenc
 
 
     private LensCalibration lensCalibration;
-
+    
     public ReferenceCamera() {
         Configuration.get().addListener(new ConfigurationListener.Adapter() {
             @Override
@@ -108,6 +109,50 @@ public abstract class ReferenceCamera extends AbstractCamera implements Referenc
                 driver = machine.getDriver();
             }
         });
+    }
+    
+    @Override
+    public BufferedImage capture() {
+        try {
+            Map<String, Object> globals = new HashMap<>();
+            globals.put("camera", this);
+            Configuration.get().getScripting().on("Camera.BeforeCapture", globals);
+        }
+        catch (Exception e) {
+            Logger.warn(e);
+        }
+        BufferedImage image = internalCapture();
+        try {
+            Map<String, Object> globals = new HashMap<>();
+            globals.put("camera", this);
+            Configuration.get().getScripting().on("Camera.AfterCapture", globals);
+        }
+        catch (Exception e) {
+            Logger.warn(e);
+        }
+        return image;
+    }
+    
+    protected abstract BufferedImage internalCapture();
+    
+    @Override
+    public int getWidth() {
+        if (width == null) {
+            BufferedImage image = internalCapture();
+            width = image.getWidth();
+            height = image.getHeight();
+        }
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        if (width == null) {
+            BufferedImage image = internalCapture();
+            width = image.getWidth();
+            height = image.getHeight();
+        }
+        return height;
     }
 
     @Override

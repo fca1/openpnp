@@ -122,5 +122,6 @@ public interface ReferenceDriver extends WizardConfigurable, PropertySheetHolder
     {
     	
     }
-    
+ 
+    public default void createDefaults() {};    
 }
