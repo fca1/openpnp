@@ -9,6 +9,7 @@
                         <compatible-package-ids class="java.util.HashSet"/>
                         <changer-start-location units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                         <changer-mid-location units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
+                        <changer-mid-location-2 units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                         <changer-end-location units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                         <calibration angle-increment="15.0" enabled="false">
                            <pipeline>
@@ -27,6 +28,8 @@
                               </stages>
                            </pipeline>
                         </calibration>
+                        <vacuum-level-part-on>0</vacuum-level-part-on>
+                        <vacuum-level-part-off>0</vacuum-level-part-off>
                      </nozzle-tip>
                   </nozzle-tips>
                   <head-offsets units="Millimeters" x="24.7" y="1.2" z="0.0" rotation="0.0"/>
@@ -38,6 +41,7 @@
                         <compatible-package-ids class="java.util.HashSet"/>
                         <changer-start-location units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                         <changer-mid-location units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
+                        <changer-mid-location-2 units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                         <changer-end-location units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                         <calibration angle-increment="15.0" enabled="false">
                            <pipeline>
@@ -56,6 +60,8 @@
                               </stages>
                            </pipeline>
                         </calibration>
+                        <vacuum-level-part-on>0</vacuum-level-part-on>
+                        <vacuum-level-part-off>0</vacuum-level-part-off>
                      </nozzle-tip>
                   </nozzle-tips>
                   <head-offsets units="Millimeters" x="44.0" y="1.2" z="0.0" rotation="0.0"/>
@@ -100,7 +106,7 @@
             <feed-start-location units="Millimeters" x="-50.218" y="8.947" z="0.0" rotation="0.0"/>
             <feed-end-location units="Millimeters" x="-46.218" y="8.947" z="0.0" rotation="0.0"/>
             <feed-speed>1.0</feed-speed>
-            <vision enabled="false" template-image-name="tmpl_7483139698364575675.png">
+            <vision enabled="false">
                <area-of-interest x="307" y="221" width="24" height="35"/>
                <template-image-top-left units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                <template-image-bottom-right units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
@@ -111,7 +117,7 @@
             <feed-start-location units="Millimeters" x="41.372" y="35.178" z="0.0" rotation="0.0"/>
             <feed-end-location units="Millimeters" x="45.772" y="35.178" z="0.0" rotation="0.0"/>
             <feed-speed>0.5</feed-speed>
-            <vision enabled="false" template-image-name="tmpl_7483139698364575675.png">
+            <vision enabled="false">
                <area-of-interest x="271" y="286" width="25" height="34"/>
                <template-image-top-left units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                <template-image-bottom-right units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
@@ -122,7 +128,7 @@
             <feed-start-location units="Millimeters" x="41.372" y="48.178" z="0.0" rotation="0.0"/>
             <feed-end-location units="Millimeters" x="45.772" y="48.178" z="0.0" rotation="0.0"/>
             <feed-speed>0.5</feed-speed>
-            <vision enabled="false" template-image-name="tmpl_7483139698364575675.png">
+            <vision enabled="false">
                <area-of-interest x="271" y="286" width="25" height="34"/>
                <template-image-top-left units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                <template-image-bottom-right units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
@@ -133,7 +139,7 @@
             <feed-start-location units="Millimeters" x="41.372" y="61.178" z="0.0" rotation="0.0"/>
             <feed-end-location units="Millimeters" x="45.772" y="61.178" z="0.0" rotation="0.0"/>
             <feed-speed>0.5</feed-speed>
-            <vision enabled="false" template-image-name="tmpl_7483139698364575675.png">
+            <vision enabled="false">
                <area-of-interest x="271" y="286" width="25" height="34"/>
                <template-image-top-left units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
                <template-image-bottom-right units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>

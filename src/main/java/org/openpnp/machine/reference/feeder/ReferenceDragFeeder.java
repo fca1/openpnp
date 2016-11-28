@@ -420,7 +420,14 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
                     if (templateImageName != null) {
                         File file = configuration.getResourceFile(Vision.this.getClass(),
                                 templateImageName);
-                        templateImage = ImageIO.read(file);
+                        try
+                        	{
+                        	templateImage = ImageIO.read(file);
+                        	}
+                        catch(IOException ioe)
+                        	{
+                        	templateImageName = null;
+                        	}
                     }
                 }
             });
