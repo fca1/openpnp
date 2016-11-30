@@ -28,12 +28,9 @@ import org.openpnp.spi.PropertySheetHolder;
 import org.openpnp.util.VisionUtils;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.pmw.tinylog.Logger;
 
 public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(tm240TinyGDriver.class);
     
     static final double SAFE_QUICK_Z=1.5;
     
@@ -108,7 +105,7 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     double a = Math.toDegrees(Math.asin((z - zCamWheelRadius - zGap) / zCamRadius));
     // Distance de 1mm de moins 
     double a_1mm = Math.toDegrees(Math.asin((z-SAFE_QUICK_Z - zCamWheelRadius - zGap) / zCamRadius));
-    logger.debug("nozzle {} {} {} {}", z, zCamRadius, a, a_1mm);
+    Logger.debug("nozzle {} {} {} {}", z, zCamRadius, a, a_1mm);
     if (getNozzleIndex(nozzle) == 1) 
     	{
     	// Symétrie degrés
@@ -356,7 +353,7 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
         	double actual_a = Math.toDegrees(Math.asin((this.zA - zCamWheelRadius - zGap) / zCamRadius));
             double a = Math.toDegrees(Math.asin((z - zCamWheelRadius - zGap) / zCamRadius));
             double a_1mm =Math.toDegrees(Math.asin((z+SAFE_QUICK_Z - zCamWheelRadius - zGap) / zCamRadius));
-            logger.debug("nozzle {} {} {}", z, zCamRadius, a);
+            Logger.debug("nozzle {} {} {}", z, zCamRadius, a);
                 if (z != this.zA) {
                 	double deep = a-this.zA;
                 	if (deep<0)
@@ -554,7 +551,7 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
                 }
         }
 
-        logger.debug("Current Position is {}, {}, {}, {}, {}", x, y, zA, c, c2);
+        Logger.debug("Current Position is {}, {}, {}, {}, {}", x, y, zA, c, c2);
     }
 
     public synchronized void disconnect() {
@@ -567,14 +564,14 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
             }
         }
         catch (Exception e) {
-            logger.error("disconnect()", e);
+            Logger.error("disconnect()", e);
         }
 
         try {
             super.disconnect();
         }
         catch (Exception e) {
-            logger.error("disconnect()", e);
+            Logger.error("disconnect()", e);
         }
         disconnectRequested = false;
     }
@@ -638,8 +635,8 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
 
 		// Send the command, if one was specified
 		if (command != null) {
-			logger.debug("sendCommand({}, {})", command, timeout);
-			logger.debug(">> " + command);
+			Logger.debug("sendCommand({}, {})", command, timeout);
+			Logger.debug(">> " + command);
 			output.write(command.getBytes());
 			output.write("\n".getBytes());
 //			System.err.println(">" + command);
@@ -670,7 +667,7 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
 				throw new Exception("Timeout waiting for response to " + command);
 			}
 
-			logger.debug("{} => {}", command, responses);
+			Logger.debug("{} => {}", command, responses);
 		}
 	return responses;
 	}
@@ -685,11 +682,11 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
                 continue;
             }
             catch (IOException e) {
-                logger.error("Read error", e);
+                Logger.error("Read error", e);
                 return;
             }
             line = line.trim();
-            logger.debug("<< " + line);
+            Logger.debug("<< " + line);
             if (line.matches(".*err.*") )
 				{
 					System.err.println("<< " + line);

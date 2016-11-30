@@ -64,7 +64,7 @@
                         <vacuum-level-part-off>0</vacuum-level-part-off>
                      </nozzle-tip>
                   </nozzle-tips>
-                  <head-offsets units="Millimeters" x="44.0" y="1.2" z="0.0" rotation="0.0"/>
+                  <head-offsets units="Millimeters" x="45.2" y="0.7" z="0.0" rotation="0.0"/>
                   <safe-z value="0.0" units="Millimeters"/>
                </nozzle>
             </nozzles>
@@ -79,7 +79,7 @@
                </actuator>
             </actuators>
             <cameras>
-               <camera class="org.openpnp.machine.reference.camera.OpenCvCamera" id="3408e08d-9c6c-4ee5-a311-a4862f5ec981" name="CamHead" looking="Down" settle-time-ms="500" rotation="0.0" flip-x="false" flip-y="false" offset-x="0" offset-y="0" crop-width="0" crop-height="0" device-index="2" preferred-width="0" preferred-height="0" fps="24">
+               <camera class="org.openpnp.machine.reference.camera.OpenCvCamera" id="3408e08d-9c6c-4ee5-a311-a4862f5ec981" name="CamHead" looking="Down" settle-time-ms="500" rotation="0.0" flip-x="false" flip-y="false" offset-x="0" offset-y="0" crop-width="0" crop-height="0" device-index="1" preferred-width="0" preferred-height="0" fps="24">
                   <units-per-pixel units="Millimeters" x="0.057" y="0.057" z="0.0" rotation="0.0"/>
                   <vision-provider class="org.openpnp.machine.reference.vision.OpenCvVisionProvider"/>
                   <head-offsets units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
@@ -178,10 +178,10 @@
          </feeder>
       </feeders>
       <cameras>
-         <camera class="org.openpnp.machine.reference.camera.OpenCvCameraLed" id="3d80d92c-1e2a-40c9-a191-f6065d709e17" name="CamTable" looking="Up" settle-time-ms="500" rotation="90.0" flip-x="true" flip-y="false" offset-x="0" offset-y="0" crop-width="0" crop-height="0" device-index="1" preferred-width="0" preferred-height="0" fps="15">
+         <camera class="org.openpnp.machine.reference.camera.OpenCvCameraLed" id="3d80d92c-1e2a-40c9-a191-f6065d709e17" name="CamTable" looking="Up" settle-time-ms="500" rotation="90.0" flip-x="true" flip-y="false" offset-x="0" offset-y="0" crop-width="0" crop-height="0" device-index="0" preferred-width="0" preferred-height="0" fps="15">
             <units-per-pixel units="Millimeters" x="0.025" y="0.025" z="0.0" rotation="0.0"/>
             <vision-provider class="org.openpnp.machine.reference.vision.OpenCvVisionProvider"/>
-            <head-offsets units="Millimeters" x="8.366" y="-10.721" z="-10.0" rotation="0.0"/>
+            <head-offsets units="Millimeters" x="9.166" y="-11.821" z="-10.0" rotation="0.0"/>
             <safe-z value="0.0" units="Millimeters"/>
             <calibration enabled="false">
                <camera-matrix length="9">0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.380230945E-315, 3.3802313E-315, 9.486E-321</camera-matrix>
@@ -192,7 +192,7 @@
       </cameras>
       <actuators/>
       <discard-location units="Millimeters" x="116.379" y="-28.012" z="-11.5" rotation="0.0"/>
-      <driver class="org.openpnp.machine.openbuilds.tm240TinyGDriver" port-name="COM3" baud="115200" flow-control="Off" data-bits="Eight" stop-bits="One" parity="None" set-dtr="true" set-rts="true" feed-rate-mm-per-minute="80000.0" feed-rate-mm-per-minute-rotation="80000.0" feed-rate-mm-per-minute-z="1000.0" z-cam-radius="17.0" z-cam-wheel-radius="0.0" z-gap="0.0" home-z="true">
+      <driver class="org.openpnp.machine.openbuilds.tm240TinyGDriver" port-name="/dev/ttyACM0" baud="115200" flow-control="Off" data-bits="Eight" stop-bits="One" parity="None" set-dtr="true" set-rts="true" feed-rate-mm-per-minute="80000.0" feed-rate-mm-per-minute-rotation="80000.0" feed-rate-mm-per-minute-z="1000.0" z-cam-radius="17.0" z-cam-wheel-radius="0.0" z-gap="0.0" home-z="true">
          <axes class="java.util.ArrayList"/>
       </driver>
       <pnp-job-processor class="org.openpnp.machine.reference.ReferencePnpJobProcessor" park-when-complete="false"/>

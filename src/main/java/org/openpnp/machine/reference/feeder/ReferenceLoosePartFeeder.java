@@ -45,8 +45,7 @@ import org.openpnp.util.VisionUtils;
 import org.openpnp.vision.pipeline.CvPipeline;
 
 import org.simpleframework.xml.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.pmw.tinylog.Logger;
 
 import nu.pattern.OpenCV;
 
@@ -71,7 +70,6 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
 	private final static double PERCENT_RATIO = 0.30;
 
 	
-    private final static Logger logger = LoggerFactory.getLogger(ReferenceLoosePartFeeder.class);
 
     @Element(required = false)
     private CvPipeline pipeline = createDefaultPipeline();
@@ -118,14 +116,14 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         		// No dimension, suppress
         		if (a.size.height==0 || a.size.width == 0) 
         			{
-        			logger.debug("Size of footprint detected = 0");
+        			Logger.debug("Size of footprint detected = 0");
         			return true;
         			}
             double ratioC =Math.min(a.size.width/a.size.height,a.size.height/a.size.width);
         	double pcentRatio = Math.abs((ratioC-ratio)/ratio);
         	if (pcentRatio>PERCENT_RATIO)
         		{
-        		logger.debug("Ratio measured = "+ratioC+" waited="+ratio+"... footprint suppressed");
+        		Logger.debug("Ratio measured = "+ratioC+" waited="+ratio+"... footprint suppressed");
         		}
 
         	return pcentRatio>PERCENT_RATIO;
@@ -135,7 +133,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         	boolean result =pcent>PERCENT_AREA;
         	if (result)
         		{
-        		logger.debug("Area filtered error of"+(pcent*100.0)+" %");
+        		Logger.debug("Area filtered error of"+(pcent*100.0)+" %");
         		}
         	return result;
         });
@@ -170,10 +168,10 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         pipeline.process();
         // Grab the results
         List<RotatedRect> results = (List<RotatedRect>) pipeline.getResult("results").model;
-        logger.debug("Number of rectangles detected : "+results.size());
-        logger.debug("fillter of part : "+part.getName());
+        Logger.debug("Number of rectangles detected : "+results.size());
+        Logger.debug("fillter of part : "+part.getName());
         List<RotatedRect> filteredResults =filterDimensionRotatedRect(results,ratio,areaPackagePixels);
-        logger.debug("Number of rectangles filtered : "+results.size()+ " ratio = "+ratio+" sizeArea="+areaPackagePixels);
+        Logger.debug("Number of rectangles filtered : "+results.size()+ " ratio = "+ratio+" sizeArea="+areaPackagePixels);
         
         
         
@@ -227,7 +225,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         boolean isSquare = Math.abs(ratio-1.0)<0.1;	// Si le ratio est <10%, ne plus considerer le rectangle
 		if (isSquare)
 		{
-			logger.debug("Detection square Angle = "+angle);
+			Logger.debug("Detection square Angle = "+angle);
 			// A square cannot have an angle high than +/- 45°
 			angle = -angle;  // l'angle est toujours negatif
 			if (angle>45)
@@ -240,7 +238,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
 			if ((result.size.width < result.size.height))  // FCA l'angle d'un rectangle 0° = cote long
 				{
 				angle-=90;
-				logger.debug("Detection rectangle Angle = "+angle);
+				Logger.debug("Detection rectangle Angle = "+angle);
 				}
 			angle=Math.abs(angle);
 			if ((angle>90))
