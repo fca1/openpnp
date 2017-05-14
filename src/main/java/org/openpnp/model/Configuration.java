@@ -46,6 +46,8 @@ import org.simpleframework.xml.stream.Format;
 import org.simpleframework.xml.stream.HyphenStyle;
 import org.simpleframework.xml.stream.Style;
 
+import com.google.common.eventbus.EventBus;
+
 public class Configuration extends AbstractModelObject {
     private static Configuration instance;
 
@@ -62,6 +64,7 @@ public class Configuration extends AbstractModelObject {
     private static final String PREF_VERTICAL_SCROLL_UNIT_INCREMENT =
             "Configuration.verticalScrollUnitIncrement";
     private static final int PREF_VERTICAL_SCROLL_UNIT_INCREMENT_DEF = 16;
+    private static final String imgurClientId = "620fc1fa8ee0180";
 
     private LinkedHashMap<String, Package> packages = new LinkedHashMap<>();
     private LinkedHashMap<String, Part> parts = new LinkedHashMap<>();
@@ -72,6 +75,7 @@ public class Configuration extends AbstractModelObject {
     private File configurationDirectory;
     private Preferences prefs;
     private Scripting scripting;
+    private EventBus bus = new EventBus();
 
     public static Configuration get() {
         if (instance == null) {
@@ -92,6 +96,10 @@ public class Configuration extends AbstractModelObject {
     
     public Scripting getScripting() {
         return scripting;
+    }
+    
+    public EventBus getBus() {
+        return bus;
     }
 
     public File getConfigurationDirectory() {
@@ -476,6 +484,10 @@ public class Configuration extends AbstractModelObject {
         serializer.write(job, file);
         job.setFile(file);
         job.setDirty(false);
+    }
+    
+    public String getImgurClientId() {
+        return imgurClientId;
     }
 
     public void saveBoard(Board board) throws Exception {

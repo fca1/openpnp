@@ -61,12 +61,6 @@ public class ImageCamera extends ReferenceCamera implements Runnable {
     public ImageCamera() {
         setUnitsPerPixel(new Location(LengthUnit.Millimeters, 0.04233, 0.04233, 0, 0));
         try {
-            setHead(Configuration.get().getMachine().getDefaultHead());
-        }
-        catch (Exception e) {
-            
-        }
-        try {
             setSourceUri(sourceUri);
         }
         catch (Exception e) {
@@ -98,7 +92,7 @@ public class ImageCamera extends ReferenceCamera implements Runnable {
         if (thread != null && thread.isAlive()) {
             thread.interrupt();
             try {
-                thread.join();
+                thread.join(3000);
             }
             catch (Exception e) {
 
@@ -110,6 +104,7 @@ public class ImageCamera extends ReferenceCamera implements Runnable {
     private synchronized void start() {
         if (thread == null) {
             thread = new Thread(this);
+            thread.setDaemon(true);
             thread.start();
         }
     }
@@ -194,12 +189,6 @@ public class ImageCamera extends ReferenceCamera implements Runnable {
 
     @Override
     public PropertySheetHolder[] getChildPropertySheetHolders() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Action[] getPropertySheetHolderActions() {
         // TODO Auto-generated method stub
         return null;
     }

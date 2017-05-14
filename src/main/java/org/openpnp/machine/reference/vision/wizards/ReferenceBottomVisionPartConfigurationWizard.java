@@ -14,6 +14,7 @@ import javax.swing.border.TitledBorder;
 
 import org.openpnp.gui.MainFrame;
 import org.openpnp.gui.support.AbstractConfigurationWizard;
+import org.openpnp.gui.support.MessageBoxes;
 import org.openpnp.machine.reference.vision.ReferenceBottomVision;
 import org.openpnp.machine.reference.vision.ReferenceBottomVision.PartSettings;
 import org.openpnp.model.LengthUnit;
@@ -107,12 +108,23 @@ public class ReferenceBottomVisionPartConfigurationWizard extends AbstractConfig
     }
 
     private void testAlignment() throws Exception {
+        if (!bottomVision.isEnabled()) {
+            MessageBoxes.errorBox(getTopLevelAncestor(), "Error", "Bottom vision is not enabled in Machine Setup.");
+            return;
+        }
+
+        if (!enabledCheckbox.isSelected()) {
+            MessageBoxes.errorBox(getTopLevelAncestor(), "Error", "Bottom vision is not enabled for this part.");
+            return;
+        }
+
         Nozzle nozzle = MainFrame.get().getMachineControls().getSelectedNozzle();
 
         // perform the alignment
 
 
-        PartAlignment.PartAlignmentOffset alignmentOffset = bottomVision.findOffsets(part, null, null, nozzle);
+        PartAlignment.PartAlignmentOffset alignmentOffset =
+                VisionUtils.findPartAlignmentOffsets(bottomVision, part, null, null, nozzle);
         Location offsets = alignmentOffset.getLocation();
 // FCA problem with the previous code, in some case the nozzle move driectly from (X0,Y0,Z0) -> (X1,Y1,Z1) !!Z0!=Z1 
         if (!chckbxCenterAfterTest.isSelected() || !isEnabled() || !partSettings.isEnabled()) {

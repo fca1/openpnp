@@ -134,6 +134,10 @@ public interface Machine extends WizardConfigurable, PropertySheetHolder, Closea
 
     public List<Class<? extends Camera>> getCompatibleCameraClasses();
 
+    public List<Class<? extends Nozzle>> getCompatibleNozzleClasses();
+
+    public List<Class<? extends Actuator>> getCompatibleActuatorClasses();
+
     public void addFeeder(Feeder feeder) throws Exception;
 
     public void removeFeeder(Feeder feeder);
@@ -142,11 +146,13 @@ public interface Machine extends WizardConfigurable, PropertySheetHolder, Closea
 
     public void removeCamera(Camera camera);
 
+    public void addActuator(Actuator actuator) throws Exception;
+
+    public void removeActuator(Actuator actuator);
+
     public PnpJobProcessor getPnpJobProcessor();
     
     public PasteDispenseJobProcessor getPasteDispenseJobProcessor();
-
-    public PasteDispenseJobProcessor getGlueDispenseJobProcessor();
 
     public Future<Object> submit(Runnable runnable);
 
@@ -195,4 +201,8 @@ public interface Machine extends WizardConfigurable, PropertySheetHolder, Closea
     public void setSpeed(double speed);
 
     public double getSpeed();
+    
+    public Object getProperty(String name);
+    
+    public void setProperty(String name, Object value);
 }

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 
 import org.apache.commons.io.IOUtils;
 import org.opencv.core.RotatedRect;
@@ -65,10 +66,10 @@ public class ReferenceNozzleTip extends AbstractNozzleTip {
 
 
     @Element(required = false)
-    private int vacuumLevelPartOn;
+    private double vacuumLevelPartOn;
 
     @Element(required = false)
-    private int vacuumLevelPartOff;
+    private double vacuumLevelPartOff;
     
     private Set<org.openpnp.model.Package> compatiblePackages = new HashSet<>();
 
@@ -101,7 +102,7 @@ public class ReferenceNozzleTip extends AbstractNozzleTip {
     public boolean canHandle(Part part) {
         boolean result =
                 allowIncompatiblePackages || compatiblePackages.contains(part.getPackage());
-        Logger.debug("{}.canHandle({}) => {}", getName(), part.getId(), result);
+        // Logger.debug("{}.canHandle({}) => {}", getName(), part.getId(), result);
         return result;
     }
 
@@ -141,7 +142,7 @@ public class ReferenceNozzleTip extends AbstractNozzleTip {
 
     @Override
     public Action[] getPropertySheetHolderActions() {
-        return new Action[] {unloadAction, loadAction};
+        return new Action[] {unloadAction, loadAction, deleteAction};
     }
 
     @Override
@@ -202,19 +203,19 @@ public class ReferenceNozzleTip extends AbstractNozzleTip {
         return null;
     }
 
-    public int getVacuumLevelPartOn() {
+    public double getVacuumLevelPartOn() {
         return vacuumLevelPartOn;
     }
 
-    public void setVacuumLevelPartOn(int vacuumLevelPartOn) {
+    public void setVacuumLevelPartOn(double vacuumLevelPartOn) {
         this.vacuumLevelPartOn = vacuumLevelPartOn;
     }
 
-    public int getVacuumLevelPartOff() {
+    public double getVacuumLevelPartOff() {
         return vacuumLevelPartOff;
     }
 
-    public void setVacuumLevelPartOff(int vacuumLevelPartOff) {
+    public void setVacuumLevelPartOff(double vacuumLevelPartOff) {
         this.vacuumLevelPartOff = vacuumLevelPartOff;
     }
 
@@ -224,7 +225,7 @@ public class ReferenceNozzleTip extends AbstractNozzleTip {
 
     public Action loadAction = new AbstractAction("Load") {
         {
-            putValue(SMALL_ICON, Icons.load);
+            putValue(SMALL_ICON, Icons.nozzleTipLoad);
             putValue(NAME, "Load");
             putValue(SHORT_DESCRIPTION, "Load the currently selected nozzle tip.");
         }
@@ -239,7 +240,7 @@ public class ReferenceNozzleTip extends AbstractNozzleTip {
 
     public Action unloadAction = new AbstractAction("Unload") {
         {
-            putValue(SMALL_ICON, Icons.unload);
+            putValue(SMALL_ICON, Icons.nozzleTipUnload);
             putValue(NAME, "Unload");
             putValue(SHORT_DESCRIPTION, "Unload the currently loaded nozzle tip.");
         }
@@ -249,6 +250,24 @@ public class ReferenceNozzleTip extends AbstractNozzleTip {
             UiUtils.submitUiMachineTask(() -> {
                 getParentNozzle().unloadNozzleTip();
             });
+        }
+    };
+    
+    public Action deleteAction = new AbstractAction("Delete Nozzle Tip") {
+        {
+            putValue(SMALL_ICON, Icons.nozzleTipRemove);
+            putValue(NAME, "Delete Nozzle Tip");
+            putValue(SHORT_DESCRIPTION, "Delete the currently selected nozzle tip.");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            int ret = JOptionPane.showConfirmDialog(MainFrame.get(),
+                    "Are you sure you want to delete " + getName() + "?",
+                    "Delete " + getName() + "?", JOptionPane.YES_NO_OPTION);
+            if (ret == JOptionPane.YES_OPTION) {
+                getParentNozzle().removeNozzleTip(ReferenceNozzleTip.this);
+            }
         }
     };
 

@@ -37,18 +37,23 @@ import org.openpnp.machine.reference.camera.SimulatedUpCamera;
 import org.openpnp.machine.reference.camera.Webcams;
 import org.openpnp.machine.reference.driver.NullDriver;
 import org.openpnp.machine.reference.feeder.ReferenceAutoFeeder;
+import org.openpnp.machine.reference.feeder.ReferenceSlotAutoFeeder;
 import org.openpnp.machine.reference.feeder.ReferenceDragFeeder;
 import org.openpnp.machine.reference.feeder.ReferenceLoosePartFeeder;
 import org.openpnp.machine.reference.feeder.ReferenceStripFeeder;
 import org.openpnp.machine.reference.feeder.ReferenceTrayFeeder;
 import org.openpnp.machine.reference.feeder.ReferenceTubeFeeder;
+import org.openpnp.machine.reference.psh.ActuatorsPropertySheetHolder;
+import org.openpnp.machine.reference.psh.CamerasPropertySheetHolder;
 import org.openpnp.machine.reference.vision.ReferenceBottomVision;
 import org.openpnp.machine.reference.vision.ReferenceFiducialLocator;
 import org.openpnp.machine.reference.wizards.ReferenceMachineConfigurationWizard;
+import org.openpnp.spi.Actuator;
 import org.openpnp.spi.Camera;
 import org.openpnp.spi.Feeder;
 import org.openpnp.spi.FiducialLocator;
 import org.openpnp.spi.Head;
+import org.openpnp.spi.Nozzle;
 import org.openpnp.spi.PartAlignment;
 import org.openpnp.spi.PasteDispenseJobProcessor;
 import org.openpnp.spi.PnpJobProcessor;
@@ -57,6 +62,7 @@ import org.openpnp.spi.base.AbstractMachine;
 import org.openpnp.spi.base.SimplePropertySheetHolder;
 import org.pmw.tinylog.Logger;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.core.Commit;
 
 public class ReferenceMachine extends AbstractMachine {
 
@@ -68,10 +74,12 @@ public class ReferenceMachine extends AbstractMachine {
     protected PnpJobProcessor pnpJobProcessor = new ReferencePnpJobProcessor();
 
     @Element(required = false)
-    protected PasteDispenseJobProcessor pasteDispenseJobProcessor = new ReferencePasteDispenseJobProcessor();
+    protected PasteDispenseJobProcessor pasteDispenseJobProcessor;
 
+    // TODO: Remove after July 1, 2017.
+    @Deprecated
     @Element(required = false)
-    protected PasteDispenseJobProcessor glueDispenseJobProcessor = new ReferenceGlueDispenseJobProcessor();
+    protected PasteDispenseJobProcessor glueDispenseJobProcessor;
 
     @Element(required = false)
     protected PartAlignment partAlignment = new ReferenceBottomVision();
@@ -85,6 +93,12 @@ public class ReferenceMachine extends AbstractMachine {
 
     private List<Class<? extends Feeder>> registeredFeederClasses = new ArrayList<>();
 
+    @Commit
+    protected void commit() {
+        super.commit();
+        glueDispenseJobProcessor = null;
+    }
+    
     public ReferenceDriver getDriver() {
         return driver;
     }
@@ -145,8 +159,8 @@ public class ReferenceMachine extends AbstractMachine {
         children.add(new SimplePropertySheetHolder("Signalers", getSignalers()));
         children.add(new SimplePropertySheetHolder("Feeders", getFeeders()));
         children.add(new SimplePropertySheetHolder("Heads", getHeads()));
-        children.add(new SimplePropertySheetHolder("Cameras", getCameras()));
-        children.add(new SimplePropertySheetHolder("Actuators", getActuators()));
+        children.add(new CamerasPropertySheetHolder(null, "Cameras", getCameras(), null));
+        children.add(new ActuatorsPropertySheetHolder(null, "Actuators", getActuators(), null));
         children.add(
                 new SimplePropertySheetHolder("Driver", Collections.singletonList(getDriver())));
         children.add(new SimplePropertySheetHolder("Job Processors",
@@ -182,6 +196,7 @@ public class ReferenceMachine extends AbstractMachine {
         l.add(ReferenceDragFeeder.class);
         l.add(ReferenceTubeFeeder.class);
         l.add(ReferenceAutoFeeder.class);
+        l.add(ReferenceSlotAutoFeeder.class);
         l.add(ReferenceLoosePartFeeder.class);
         l.addAll(registeredFeederClasses);
         return l;
@@ -196,6 +211,21 @@ public class ReferenceMachine extends AbstractMachine {
         l.add(OnvifIPCamera.class);
         l.add(ImageCamera.class);
         l.add(SimulatedUpCamera.class);
+        return l;
+    }
+    
+    @Override
+    public List<Class<? extends Nozzle>> getCompatibleNozzleClasses() {
+        List<Class<? extends Nozzle>> l = new ArrayList<>();
+        l.add(ReferenceNozzle.class);
+        return l;
+    }
+
+    @Override
+    public List<Class<? extends Actuator>> getCompatibleActuatorClasses() {
+        List<Class<? extends Actuator>> l = new ArrayList<>();
+        l.add(ReferenceActuator.class);
+        l.add(HttpActuator.class);
         return l;
     }
 
@@ -252,10 +282,4 @@ public class ReferenceMachine extends AbstractMachine {
     public PasteDispenseJobProcessor getPasteDispenseJobProcessor() {
         return pasteDispenseJobProcessor;
     }
-
-    @Override
-    public PasteDispenseJobProcessor getGlueDispenseJobProcessor() {
-        return glueDispenseJobProcessor;
-    }
-
 }

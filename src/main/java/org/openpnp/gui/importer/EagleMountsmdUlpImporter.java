@@ -102,13 +102,13 @@ public class EagleMountsmdUlpImporter implements BoardImporter {
 // @TODO add comments with the lexical data of this new centroid lines. (the goal is to concatenate in same time, 
 // The reference (not friendly readable) of package, with a readable size of package. 
 // Example of line 
-// C1 14.00 16.00   0 ECA0080 CAPAE1350X140N H H_470µF
+// C1 14.00 16.00   0 ECA0080 CAPAE1350X140N H H_470ï¿½F
 // ECA0080 : codification of part (reel)
 // CAPAE1350X140N : Refence package IPC7351 (capa 1.3x5.0mm, 14.0height, N=normal pad)
 // H_470uF  readable human package (Value & package)
 
 
-    private static List<Placement> parseFile(File file, Side side, boolean createMissingParts)
+    public static List<Placement> parseFile(File file, Side side, boolean createMissingParts)
             throws Exception {
     	
     	
