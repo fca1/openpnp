@@ -24,11 +24,12 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -38,7 +39,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
-import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -55,6 +55,7 @@ import org.openpnp.spi.HeadMountable;
 import org.openpnp.spi.Machine;
 import org.openpnp.spi.Nozzle;
 import org.openpnp.spi.PasteDispenser;
+import org.openpnp.util.BeanUtils;
 import org.openpnp.util.MovableUtils;
 import org.openpnp.util.UiUtils;
 
@@ -71,7 +72,6 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 public class JogControlsPanel extends JPanel {
     private final MachineControlsPanel machineControlsPanel;
-    private final Frame frame;
     private final Configuration configuration;
     private JPanel panelActuators;
     private JPanel panelDispensers;
@@ -80,10 +80,9 @@ public class JogControlsPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public JogControlsPanel(Configuration configuration, MachineControlsPanel machineControlsPanel,
-            Frame frame) {
+    public JogControlsPanel(Configuration configuration,
+            MachineControlsPanel machineControlsPanel) {
         this.machineControlsPanel = machineControlsPanel;
-        this.frame = frame;
         this.configuration = configuration;
 
         createUi();
@@ -155,8 +154,8 @@ public class JogControlsPanel extends JPanel {
 
     private void jog(final int x, final int y, final int z, final int c) {
         UiUtils.submitUiMachineTask(() -> {
-            Location l = machineControlsPanel.getSelectedNozzle().getLocation()
-                    .convertToUnits(Configuration.get().getSystemUnits());
+            HeadMountable tool = machineControlsPanel.getSelectedTool();
+            Location l = tool.getLocation().convertToUnits(Configuration.get().getSystemUnits());
             double xPos = l.getX();
             double yPos = l.getY();
             double zPos = l.getZ();
@@ -193,8 +192,7 @@ public class JogControlsPanel extends JPanel {
                 cPos -= jogIncrement;
             }
 
-            machineControlsPanel.getSelectedNozzle()
-                    .moveTo(new Location(l.getUnits(), xPos, yPos, zPos, cPos));
+            tool.moveTo(new Location(l.getUnits(), xPos, yPos, zPos, cPos));
         });
     }
 
@@ -232,7 +230,8 @@ public class JogControlsPanel extends JPanel {
                         FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
                         FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
                         FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
-                        FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"),},
+                        FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
+                        FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,},
                 new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
                         FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
                         FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
@@ -300,6 +299,11 @@ public class JogControlsPanel extends JPanel {
             }
         });
 
+        JButton positionNozzleBtn = new JButton(machineControlsPanel.targetToolAction);
+        positionNozzleBtn.setIcon(Icons.centerTool);
+        positionNozzleBtn.setHideActionText(true);
+        panelControls.add(positionNozzleBtn, "22, 4");
+
         JButton buttonStartStop = new JButton(machineControlsPanel.startStopMachineAction);
         buttonStartStop.setIcon(Icons.powerOn);
         panelControls.add(buttonStartStop, "2, 6");
@@ -328,6 +332,11 @@ public class JogControlsPanel extends JPanel {
         JButton zDownButton = new JButton(zMinusAction);
         zDownButton.setHideActionText(true);
         panelControls.add(zDownButton, "14, 8");
+
+        JButton positionCameraBtn = new JButton(machineControlsPanel.targetCameraAction);
+        positionCameraBtn.setIcon(Icons.centerCamera);
+        positionCameraBtn.setHideActionText(true);
+        panelControls.add(positionCameraBtn, "22, 8");
 
         JLabel lblC = new JLabel("C");
         lblC.setHorizontalAlignment(SwingConstants.CENTER);
@@ -535,6 +544,29 @@ public class JogControlsPanel extends JPanel {
         }
     };
 
+    private void addActuator(Actuator actuator) {
+        String name = actuator.getHead() == null ? actuator.getName()
+                : actuator.getHead().getName() + ":" + actuator.getName();
+        JButton actuatorButton = new JButton(name);
+        actuatorButton.addActionListener((e) -> {
+            ActuatorControlDialog dlg = new ActuatorControlDialog(actuator);
+            dlg.pack();
+            dlg.revalidate();
+            dlg.setLocationRelativeTo(JogControlsPanel.this);
+            dlg.setVisible(true);
+        });
+        BeanUtils.addPropertyChangeListener(actuator, "name", e -> {
+            actuatorButton.setText(actuator.getHead() == null ? actuator.getName()
+                    : actuator.getHead().getName() + ":" + actuator.getName());
+        });
+        panelActuators.add(actuatorButton);
+        actuatorButtons.put(actuator, actuatorButton);
+    }
+
+    private void removeActuator(Actuator actuator) {
+        panelActuators.remove(actuatorButtons.remove(actuator));
+    }
+
     private ConfigurationListener configurationListener = new ConfigurationListener.Adapter() {
         @Override
         public void configurationComplete(Configuration configuration) throws Exception {
@@ -546,55 +578,46 @@ public class JogControlsPanel extends JPanel {
             Machine machine = Configuration.get().getMachine();
 
             for (Actuator actuator : machine.getActuators()) {
-                final Actuator actuator_f = actuator;
-                final JToggleButton actuatorButton = new JToggleButton(actuator_f.getName());
-                actuatorButton.setFocusable(false);
-                actuatorButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        final boolean state = actuatorButton.isSelected();
-                        UiUtils.submitUiMachineTask(() -> {
-                            actuator_f.actuate(state);
-                        });
-                    }
-                });
-                panelActuators.add(actuatorButton);
+                addActuator(actuator);
             }
             for (final Head head : machine.getHeads()) {
                 for (Actuator actuator : head.getActuators()) {
-                    final Actuator actuator_f = actuator;
-                    final JToggleButton actuatorButton =
-                            new JToggleButton(head.getName() + ":" + actuator_f.getName());
-                    actuatorButton.setFocusable(false);
-                    actuatorButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            final boolean state = actuatorButton.isSelected();
-                            UiUtils.submitUiMachineTask(() -> {
-                                actuator_f.actuate(state);
-                            });
-                        }
-                    });
-                    panelActuators.add(actuatorButton);
+                    addActuator(actuator);
                 }
                 for (final PasteDispenser dispenser : head.getPasteDispensers()) {
                     final JButton dispenserButton =
                             new JButton(head.getName() + ":" + dispenser.getName());
                     dispenserButton.setFocusable(false);
-                    dispenserButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            UiUtils.submitUiMachineTask(() -> {
-                                dispenser.dispense(null, null, 250);
-                            });
-                        }
+                    dispenserButton.addActionListener((e) -> {
+                        UiUtils.submitUiMachineTask(() -> {
+                            dispenser.dispense(null, null, 250);
+                        });
                     });
                     panelDispensers.add(dispenserButton);
                 }
             }
 
+
+            PropertyChangeListener listener = (e) -> {
+                if (e.getOldValue() == null && e.getNewValue() != null) {
+                    Actuator actuator = (Actuator) e.getNewValue();
+                    addActuator(actuator);
+                }
+                else if (e.getOldValue() != null && e.getNewValue() == null) {
+                    removeActuator((Actuator) e.getOldValue());
+                }
+            };
+
+            BeanUtils.addPropertyChangeListener(machine, "actuators", listener);
+            for (Head head : machine.getHeads()) {
+                BeanUtils.addPropertyChangeListener(head, "actuators", listener);
+            }
+
+
             setEnabled(machineControlsPanel.isEnabled());
         }
     };
+
+    private Map<Actuator, JButton> actuatorButtons = new HashMap<>();
     private JSlider speedSlider;
 }

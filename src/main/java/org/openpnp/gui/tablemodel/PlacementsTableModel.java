@@ -38,7 +38,7 @@ public class PlacementsTableModel extends AbstractTableModel {
     final Configuration configuration;
 
     private String[] columnNames =
-            new String[] {"Id", "Part", "Side", "X", "Y", "ø", "Type", "Status", "Glue"};
+            new String[] {"Id", "Part", "Side", "X", "Y", "Rot.", "Type", "Status", "Check Fids"};
 
     private Class[] columnTypes = new Class[] {PartCellValue.class, Part.class, Side.class,
             LengthCellValue.class, LengthCellValue.class, RotationCellValue.class, Type.class,
@@ -62,7 +62,9 @@ public class PlacementsTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
     
-    
+    public Placement getPlacement(int index) {
+        return board.getPlacements().get(index);
+    }
 
     @Override
     public String getColumnName(int column) {
@@ -124,7 +126,7 @@ public class PlacementsTableModel extends AbstractTableModel {
                 placement.setType((Type) aValue);
             }
             else if (columnIndex == 8) {
-                placement.setGlue((Boolean) aValue);
+                placement.setCheckFids((Boolean) aValue);
             }
         }
         catch (Exception e) {
@@ -180,7 +182,7 @@ public class PlacementsTableModel extends AbstractTableModel {
             case 7:
                 return getPlacementStatus(placement);
             case 8:
-                return placement.getGlue();
+                return placement.getCheckFids();
             default:
                 return null;
         }

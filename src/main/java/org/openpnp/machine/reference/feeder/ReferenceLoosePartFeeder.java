@@ -50,13 +50,12 @@ import org.pmw.tinylog.Logger;
 import nu.pattern.OpenCV;
 
 /*
- * TODO: We need to be able to determine "normal" angle for the part, which probably means
- * width and height, which is going to be tough when the body is square. Might need to make
- * it more related to bottom vision so that it can determine the correct angle for what
- * it locates.
- * TODO: Remember the idea of using contours or whatever to find the part and then using
- * template matching to get it's orientation. That would solve the above, and make it work
- * for polarized parts too.
+ * TODO: We need to be able to determine "normal" angle for the part, which probably means width and
+ * height, which is going to be tough when the body is square. Might need to make it more related to
+ * bottom vision so that it can determine the correct angle for what it locates.
+ * TODO: Remember the idea of using contours or whatever to find the part and then using template
+ * matching to get it's orientation. That would solve the above, and make it work for polarized
+ * parts too.
  * 
  * And related to that, this might be a good time to play with something like SIFT.
  */
@@ -207,7 +206,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
 
         	if (l2<0.5)
         		{
-        		if (result==null) result = rect;
+        		if (result==null) { result = rect; }
         		}
         	}
         if (result==null)
@@ -226,7 +225,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
 		if (isSquare)
 		{
 			Logger.debug("Detection square Angle = "+angle);
-			// A square cannot have an angle high than +/- 45°
+			// A square cannot have an angle high than +/- 45�
 			angle = -angle;  // l'angle est toujours negatif
 			if (angle>45)
 				{
@@ -235,7 +234,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
 			}
 		else
 			{
-			if ((result.size.width < result.size.height))  // FCA l'angle d'un rectangle 0° = cote long
+			if ((result.size.width < result.size.height))  // FCA l'angle d'un rectangle 0� = cote long
 				{
 				angle-=90;
 				Logger.debug("Detection rectangle Angle = "+angle);

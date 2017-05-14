@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.openpnp.CameraListener;
 import org.openpnp.gui.support.Wizard;
 import org.openpnp.machine.reference.camera.wizards.OpenCvCameraLedConfigurationWizard;
+import org.openpnp.spi.Machine;
 import org.openpnp.vision.pipeline.stages.convert.ColorConverter;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.convert.Convert;
@@ -30,7 +31,7 @@ public class OpenCvCameraLed extends OpenCvCamera {
 	@Override
 	public void setLightingColor(Color color) {
 		try {
-			machine.getDriver().setLightingColor(color);
+//VENOM			machine.getDriver().setLightingColor(color);
 			setColor(color);
 		} catch (Exception e) {
 

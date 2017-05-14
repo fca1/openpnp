@@ -30,11 +30,11 @@ import javax.imageio.ImageIO;
 import javax.swing.Action;
 
 import org.openpnp.ConfigurationListener;
-import org.openpnp.gui.support.PropertySheetWizardAdapter;
 import org.openpnp.gui.support.Wizard;
 import org.openpnp.machine.reference.ReferenceFeeder;
 import org.openpnp.machine.reference.feeder.wizards.ReferenceDragFeederConfigurationWizard;
 import org.openpnp.model.Configuration;
+import org.openpnp.model.Length;
 import org.openpnp.model.LengthUnit;
 import org.openpnp.model.Location;
 import org.openpnp.model.Part;
@@ -45,6 +45,7 @@ import org.openpnp.spi.Head;
 import org.openpnp.spi.Nozzle;
 import org.openpnp.spi.PropertySheetHolder;
 import org.openpnp.spi.VisionProvider;
+import org.openpnp.util.Utils2D;
 import org.pmw.tinylog.Logger;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -79,14 +80,10 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
     protected double feedSpeed = 1.0;
     @Attribute(required = false)
     protected String actuatorName;
-// FCA On the drag feeder of TM240, there are 2 actuator.
-// First is already planned, (the solenoid), the second is the enrollment of plastic reel, (the motor turns a few time)
-// This second actuator must be used for that. (name is : after)
-
-    @Attribute(required = false)
-    protected String actuatorAfterName;
     @Element(required = false)
     protected Vision vision = new Vision();
+    @Element(required = false)
+    protected Length backoffDistance = new Length(0, LengthUnit.Millimeters);    
 
     protected Location pickLocation;
 
@@ -107,7 +104,7 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
     }
 
     @Override
-    public void feed(Nozzle nozzle,Part part) throws Exception {
+    public void feed(Nozzle nozzle) throws Exception {
         Logger.debug("feed({})", nozzle);
 
         if (actuatorName == null) {
@@ -125,8 +122,6 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
          */
 
         Actuator actuator = head.getActuatorByName(actuatorName);
-        Actuator actuatorAfter = head.getActuatorByName(actuatorAfterName);
-
 
         if (actuator == null) {
             throw new Exception(String.format("No Actuator found with name %s on feed Head %s",
@@ -143,11 +138,11 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
                 // for the next operation. By front loading this we make sure
                 // that all future calls can go directly to the feed operation
                 // and skip checking the vision first.
-
+                Logger.debug("First feed, running vision pre-flight.");
 
                 visionOffset = getVisionOffsets(head, location);
             }
-
+            Logger.debug("visionOffsets " + visionOffset);
         }
 
         // Now we have visionOffsets (if we're using them) so we
@@ -175,42 +170,29 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
 
         // drag the tape
         actuator.moveTo(feedEndLocation, feedSpeed * actuator.getHead().getMachine().getSpeed());
-
+        
+        // backoff to release tension from the pin
+        if (backoffDistance.getValue() != 0) {
+            Location backoffLocation = Utils2D.getPointAlongLine(feedEndLocation, feedStartLocation, backoffDistance);
+            actuator.moveTo(backoffLocation, feedSpeed * actuator.getHead().getMachine().getSpeed());
+        }
+        
         head.moveToSafeZ();
-
-        // Retract following vector 
-		// @TODO a partial vector of deplacement is computed (1%), to overflow the position
-		// and return to initial position. Avoid problem of trapping
-
-        Location locEnd = feedEndLocation.subtract(feedStartLocation).multiply(1.01, 1.01, 1d, 1.0).add(feedStartLocation);
-        actuator.moveTo(locEnd, feedSpeed * actuator.getHead().getMachine().getSpeed());
-        actuator.moveTo(feedEndLocation, feedSpeed * actuator.getHead().getMachine().getSpeed());
-        
-        
-        if (actuatorAfter != null)
-    	{
-    	actuatorAfter.actuate(true);
-    	}
-
 
         // retract the pin
         actuator.actuate(false);
 
-  
         if (vision.isEnabled()) {
             visionOffset = getVisionOffsets(head, location);
 
-
             Logger.debug("final visionOffsets " + visionOffset);
         }
-
 
         Logger.debug("Modified pickLocation {}", pickLocation);
     }
 
     // TODO: Throw an Exception if vision fails.
     private Location getVisionOffsets(Head head, Location pickLocation) throws Exception {
-
         Logger.debug("getVisionOffsets({}, {})", head.getName(), pickLocation);
         // Find the Camera to be used for vision
         // TODO: Consider caching this
@@ -228,7 +210,6 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         head.moveToSafeZ();
 
         // Position the camera over the pick location.
-
         Logger.debug("Move camera to pick location.");
         camera.moveTo(pickLocation);
 
@@ -243,7 +224,6 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         Rectangle aoi = getVision().getAreaOfInterest();
 
         // Perform the template match
-
         Logger.debug("Perform template match.");
         Point[] matchingPoints = visionProvider.locateTemplateMatches(aoi.getX(), aoi.getY(),
                 aoi.getWidth(), aoi.getHeight(), 0, 0, vision.getTemplateImage());
@@ -261,14 +241,12 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         double matchX = match.x;
         double matchY = match.y;
 
-
         Logger.debug("matchX {}, matchY {}", matchX, matchY);
 
         // Adjust the match x and y to be at the center of the match instead of
         // the top left corner.
         matchX += (templateWidth / 2);
         matchY += (templateHeight / 2);
-
 
         Logger.debug("centered matchX {}, matchY {}", matchX, matchY);
 
@@ -277,13 +255,11 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         double offsetX = (imageWidth / 2) - matchX;
         double offsetY = (imageHeight / 2) - matchY;
 
-
         Logger.debug("offsetX {}, offsetY {}", offsetX, offsetY);
 
         // Invert the Y offset because images count top to bottom and the Y
         // axis of the machine counts bottom to top.
         offsetY *= -1;
-
 
         Logger.debug("negated offsetX {}, offsetY {}", offsetX, offsetY);
 
@@ -291,7 +267,6 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         Location unitsPerPixel = camera.getUnitsPerPixel();
         offsetX *= unitsPerPixel.getX();
         offsetY *= unitsPerPixel.getY();
-
 
         Logger.debug("final, in camera units offsetX {}, offsetY {}", offsetX, offsetY);
 
@@ -331,23 +306,20 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         return actuatorName;
     }
 
-    public String getActuatorAfterName() {
-        return actuatorAfterName;
-    }
-
     public void setActuatorName(String actuatorName) {
         String oldValue = this.actuatorName;
         this.actuatorName = actuatorName;
         propertyChangeSupport.firePropertyChange("actuatorName", oldValue, actuatorName);
     }
 
-    public void setActuatorAfterName(String actuatorName) {
-        String oldValue = this.actuatorAfterName;
-        this.actuatorAfterName = actuatorName;
-        propertyChangeSupport.firePropertyChange("actuatorAfterName", oldValue, actuatorName);
+    public Length getBackoffDistance() {
+        return backoffDistance;
     }
-    
-    
+
+    public void setBackoffDistance(Length backoffDistance) {
+        this.backoffDistance = backoffDistance;
+    }
+
     public Vision getVision() {
         return vision;
     }
@@ -356,23 +328,19 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         this.vision = vision;
     }
 
-    @Override
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
-    @Override
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
     }
 
-    @Override
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
-    @Override
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 
@@ -420,14 +388,7 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
                     if (templateImageName != null) {
                         File file = configuration.getResourceFile(Vision.this.getClass(),
                                 templateImageName);
-                        try
-                        	{
-                        	templateImage = ImageIO.read(file);
-                        	}
-                        catch(IOException ioe)
-                        	{
-                        	templateImageName = null;
-                        	}
+                        templateImage = ImageIO.read(file);
                     }
                 }
             });
@@ -493,4 +454,10 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
             this.templateImageBottomRight = templateImageBottomRight;
         }
     }
+
+	@Override
+	public void feed(Nozzle nozzle, Part part) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }
