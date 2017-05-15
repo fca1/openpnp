@@ -77,6 +77,8 @@ public class CameraView extends JComponent implements CameraListener {
     private static final String DEFAULT_RETICLE_KEY = "DEFAULT_RETICLE_KEY";
 
     private final static int HANDLE_DIAMETER = 8;
+    
+    private final static double PERCENT_MAGNITY_WHEEL=0.05d;
 
     private enum HandlePosition {
         NW,
@@ -1354,7 +1356,7 @@ public class CameraView extends JComponent implements CameraListener {
     private MouseWheelListener mouseWheelListener = new MouseWheelListener() {
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
-            zoom -= e.getPreciseWheelRotation() * 0.01d;
+            zoom -= e.getPreciseWheelRotation() * PERCENT_MAGNITY_WHEEL;
             zoom = Math.max(zoom, 1.0d);
             zoom = Math.min(zoom, 100d);
             calculateScalingData();
