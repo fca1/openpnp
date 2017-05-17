@@ -85,4 +85,19 @@
    <part id="ECA0140" name="0805_680nF" height-units="Millimeters" height="0.0" package-id="CAPC2012X145AN" speed="1.0"/>
    <part id="ECA0103" name="0805_470nF" height-units="Millimeters" height="0.0" package-id="CAPC2012X145AN" speed="1.0"/>
    <part id="ECA0002" name="0603_1nF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0070" name="0805_10uF" height-units="Millimeters" height="0.0" package-id="CAPC2012X145AN" speed="1.0"/>
+   <part id="ECA0021" name="1206_10uF" height-units="Millimeters" height="0.0" package-id="CAPC3215X168N" speed="1.0"/>
+   <part id="ECA0020" name="0603_12pF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0006" name="0805_1?F" height-units="Millimeters" height="0.0" package-id="CAPC2012X145AN" speed="1.0"/>
+   <part id="ECA0105" name="0603_10pF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="ECA0016" name="0603_47pF" height-units="Millimeters" height="0.0" package-id="CAPC1608X92N" speed="1.0"/>
+   <part id="EDI0035" name="SOD-123_MBR0530T3G" height-units="Millimeters" height="0.0" package-id="SOD3718X135N" speed="1.0"/>
+   <part id="EIN0075" name="1210_68uH" height-units="Millimeters" height="0.0" package-id="INDC3225X135N" speed="1.0"/>
+   <part id="ETR0014" name="SOT23_MOSFET-PCH_0014_SOT-23" height-units="Millimeters" height="0.0" package-id="SOT95P280X135-3N" speed="1.0"/>
+   <part id="ERE0088" name="0603_100R" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0111" name="0603_0.47R" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="ERE0030" name="0603_22K" height-units="Millimeters" height="0.0" package-id="RESC1608N" speed="1.0"/>
+   <part id="EIC0120" name="LQFP64_R5F104LLA" height-units="Millimeters" height="0.0" package-id="QFP50P1200X170-64" speed="1.0"/>
+   <part id="EIC0122" name="LLGA12_NCP5623B" height-units="Millimeters" height="0.0" package-id="NXP_513AA_NCP5623B" speed="1.0"/>
+   <part id="EIC0111" name="SOIC-8_PCF8883" height-units="Millimeters" height="0.0" package-id="SOP127P620X150-8" speed="1.0"/>
 </openpnp-parts>

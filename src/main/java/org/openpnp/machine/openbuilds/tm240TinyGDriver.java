@@ -181,9 +181,6 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     @Override
     public void home(ReferenceHead head) throws Exception {
     	
-    	
-    	waitMachineReady(sendCommand(HOMEAB_CMD, 1000),10*1000);
-       waitMachineReady(sendCommand(HOMEXY_CMD, 1000),30*1000);
         if (homeZ) {
             // Home Z
             waitMachineReady(sendCommand(HOMEZ_CMD, 1000),10*1000);
@@ -195,6 +192,9 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
             // And wait a tick just to let things settle down
             Thread.sleep(250);
         }
+    	
+    	waitMachineReady(sendCommand(HOMEAB_CMD, 1000),10*1000);
+       waitMachineReady(sendCommand(HOMEXY_CMD, 1000),30*1000);
         
         // Update position
         getCurrentPosition();
@@ -758,7 +758,7 @@ public class tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     }
 
     protected void led(boolean on) throws Exception {
-        
+    	setLightingColor(on ? new Color(0,32,0) : Color.black);
     }
     
     protected boolean getStateOfInput(int nber_input) throws Exception

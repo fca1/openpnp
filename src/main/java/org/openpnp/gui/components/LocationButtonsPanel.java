@@ -19,6 +19,7 @@
 
 package org.openpnp.gui.components;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 
@@ -225,6 +226,7 @@ public class LocationButtonsPanel extends JPanel {
                 public void actionPerformed(ActionEvent arg0) {
                     UiUtils.submitUiMachineTask(() -> {
                         Camera camera = getCamera();
+                        
                         Location location = getParsedLocation();
                         MovableUtils.moveToLocationAtSafeZ(camera, location);
                     });

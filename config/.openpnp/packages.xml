@@ -18,7 +18,7 @@
          <pad name="1" x="0.0" y="0.0" width="0.9" height="0.9" rotation="0.0" roundness="100.0"/>
       </footprint>
    </package>
-   <package id="SOT95P280X135-3N" description="SOT23-3" height-units="Millimeters" height="1.35">
+   <package id="SOT95P280X135-3N" description="SOT23-3" height-units="Millimeters" height="1.4">
       <outline units="Millimeters"/>
       <footprint units="Millimeters" body-width="2.9" body-height="2.4"/>
    </package>
@@ -50,7 +50,7 @@
       <outline units="Millimeters"/>
       <footprint units="Millimeters" body-width="3.2" body-height="2.5"/>
    </package>
-   <package id="CAPMP7343X310N" description="D" height-units="Millimeters" height="0.0">
+   <package id="CAPMP7343X310N" description="D" height-units="Millimeters" height="3.1">
       <outline units="Millimeters"/>
       <footprint units="Millimeters" body-width="7.3" body-height="4.3"/>
    </package>
@@ -193,6 +193,26 @@
       <footprint units="Millimeters" body-width="3.0" body-height="2.0"/>
    </package>
    <package id="CAPAE1030X1020N" description="G" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="CAPC3215X168N" description="1206" height-units="Millimeters" height="1.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="3.1" body-height="1.5"/>
+   </package>
+   <package id="INDC3225X135N" description="1210" height-units="Millimeters" height="2.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="3.1" body-height="2.2"/>
+   </package>
+   <package id="QFP50P1200X170-64" description="LQFP64" height-units="Millimeters" height="2.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="NXP_513AA_NCP5623B" description="LLGA12" height-units="Millimeters" height="0.0">
+      <outline units="Millimeters"/>
+      <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
+   </package>
+   <package id="SOP127P620X150-8" description="SOIC-8" height-units="Millimeters" height="0.0">
       <outline units="Millimeters"/>
       <footprint units="Millimeters" body-width="0.0" body-height="0.0"/>
    </package>
