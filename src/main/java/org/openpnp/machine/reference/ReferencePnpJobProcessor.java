@@ -667,10 +667,11 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
                  */
                 if(plannedPlacement.alignmentOffsets.getPreRotated())
                 {
-                    Location location = placementLocation;
-                    location = location.derive(null, null, null,
-                            plannedPlacement.alignmentOffsets.getLocation().getRotation());
-                    placementLocation = location;
+//                    Location location = placementLocation;
+//                    location = location.derive(null, null, null,
+//                            plannedPlacement.alignmentOffsets.getLocation().getRotation());
+//                    placementLocation = location;
+                	placementLocation = placementLocation.subtractWithRotation(plannedPlacement.alignmentOffsets.getLocation());
                 }
                 else
                 {

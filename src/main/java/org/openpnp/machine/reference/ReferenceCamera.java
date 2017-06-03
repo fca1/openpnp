@@ -577,7 +577,7 @@ public abstract class ReferenceCamera extends AbstractCamera implements Referenc
         }
     };
     
-    ReferenceDriver getDriver() {
+    protected ReferenceDriver getDriver() {
         return getMachine().getDriver();
     }
     

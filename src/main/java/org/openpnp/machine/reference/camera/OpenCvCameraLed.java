@@ -31,7 +31,7 @@ public class OpenCvCameraLed extends OpenCvCamera {
 	@Override
 	public void setLightingColor(Color color) {
 		try {
-//VENOM			machine.getDriver().setLightingColor(color);
+			getDriver().setLightingColor(color);
 			setColor(color);
 		} catch (Exception e) {
 
