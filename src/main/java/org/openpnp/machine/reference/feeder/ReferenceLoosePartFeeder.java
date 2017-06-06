@@ -96,7 +96,9 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         // Move to the feeder pick location
         MovableUtils.moveToLocationAtSafeZ(camera, location);
         for (int i = 0; i < 3; i++) {
-            pickLocation = getPickLocation(camera,part);
+
+        	//VEN_FCA            pickLocation = getPickLocation(camera,part);
+            pickLocation = getPickLocation(camera, nozzle);
             camera.moveTo(pickLocation);
         }
     }
@@ -142,7 +144,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
      
     
     
-    private Location getPickLocation(Camera camera,Part part) throws Exception {
+    private Location getPickLocation(Camera camera, Nozzle nozzle) throws Exception {
         org.openpnp.model.Package pack = part.getPackage();
 // FCA @TODO if the part has a big value of height, the focal length is not ridiculous and the size of 
 // rectangle increase. 
@@ -164,6 +166,8 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         
         // Process the pipeline to extract RotatedRect results
         pipeline.setCamera(camera);
+        pipeline.setNozzle(nozzle);
+        pipeline.setFeeder(this);
         pipeline.process();
         // Grab the results
         List<RotatedRect> results = (List<RotatedRect>) pipeline.getResult("results").model;
