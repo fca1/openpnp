@@ -62,7 +62,7 @@ public class ReferenceBottomVision implements PartAlignment {
         }
 
         Camera camera = VisionUtils.getBottomVisionCamera();
-
+        preRotate= true;
         // Pre-rotate to minimize runout
         double preRotateAngle = 0;
         if ( boardLocation != null && placementLocation != null) {
@@ -88,6 +88,7 @@ public class ReferenceBottomVision implements PartAlignment {
         pipeline.setNozzle(nozzle);
         pipeline.process();
         boolean postRotate = Double.isNaN(pipeline.getValue());
+        
         preRotateAngle = preRotate || postRotate ? preRotateAngle : 0.;
         
         Result result = pipeline.getResult("result");
@@ -143,7 +144,7 @@ public class ReferenceBottomVision implements PartAlignment {
                                          .getCameraView(camera);
         String s = rect.size.toString() + " " + rect.angle + "°";
         cameraView.showFilteredImage(OpenCvUtils.toBufferedImage(pipeline.getWorkingImage()), s,
-                1500);
+                2500);
 
 
         return new PartAlignmentOffset(offsets,preRotate||postRotate);
