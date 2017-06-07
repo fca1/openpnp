@@ -1,5 +1,6 @@
 package org.openpnp.machine.reference.vision;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import org.openpnp.util.OpenCvUtils;
 import org.openpnp.util.Utils2D;
 import org.openpnp.util.VisionUtils;
 import org.openpnp.vision.pipeline.CvPipeline;
+import org.openpnp.vision.pipeline.CvStage;
 import org.openpnp.vision.pipeline.CvStage.Result;
 import org.pmw.tinylog.Logger;
 import org.simpleframework.xml.Attribute;
@@ -46,7 +48,7 @@ public class ReferenceBottomVision implements PartAlignment {
     protected boolean enabled = false;
 
     @Attribute(required = false)
-    protected boolean preRotate = false;
+    protected boolean preRotate = true;
 
     @ElementMap(required = false)
     protected Map<String, PartSettings> partSettingsByPartId = new HashMap<>();
@@ -62,7 +64,7 @@ public class ReferenceBottomVision implements PartAlignment {
         }
 
         Camera camera = VisionUtils.getBottomVisionCamera();
-        preRotate= true;
+        
         // Pre-rotate to minimize runout
         double preRotateAngle = 0;
         if ( boardLocation != null && placementLocation != null) {
@@ -92,13 +94,29 @@ public class ReferenceBottomVision implements PartAlignment {
         preRotateAngle = preRotate || postRotate ? preRotateAngle : 0.;
         
         Result result = pipeline.getResult("result");
-        if (!(result.model instanceof RotatedRect)) {
-            throw new Exception("Bottom vision alignment failed for part " + part.getId()
-                    + " on nozzle " + nozzle.getName() + ". No result found.");
+        RotatedRect rect = new RotatedRect();
+        
+        if ((result.model instanceof ArrayList)) {
+        	ArrayList<Result.Circle> t=(ArrayList)result.model;
+        	if (t.size()==0)
+        		{
+                throw new Exception("Bottom vision alignment failed for part " + part.getId()
+                + " on nozzle " + nozzle.getName() + ". No result found.");
+        		}
+        	Result.Circle s = t.get(0);
+        	Logger.debug("Result circle {}", s);	
+        	rect.center.x = s.x;
+        	rect.center.y = s.y;
+        	preRotate = false;
+        	//rect.angle = preRotate?preRotateAngle:0;
+        	
+        	
         }
-        RotatedRect rect = (RotatedRect) result.model;
-        Logger.debug("Result rect {}", rect);
-
+        
+        if ((result.model instanceof RotatedRect)) {
+        	rect = (RotatedRect) result.model;
+        	Logger.debug("Result rect {}", rect);
+        	}
         // Create the offsets object. This is the physical distance from
         // the center of the camera to the located part.
         Location offsets = VisionUtils.getPixelCenterOffsets(camera, rect.center.x, rect.center.y);
@@ -133,7 +151,7 @@ public class ReferenceBottomVision implements PartAlignment {
                     location = location.derive(null, null, null, nozzle.getLocation().getRotation()-angle);
                     offsets  = location.subtract(offsets);
         }
-
+        
         Logger.debug("Final offsets {}", offsets);
 
         OpenCvUtils.saveDebugImage(ReferenceBottomVision.class, "findOffsets", "result",

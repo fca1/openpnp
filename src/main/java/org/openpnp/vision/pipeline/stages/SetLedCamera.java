@@ -30,6 +30,7 @@ public class SetLedCamera extends CvStage {
 	@Override
 	public Result process(CvPipeline pipeline) throws Exception {
 		pipeline.getCamera().setLightingColor(color);
+		Thread.sleep(200);
 		return null;
 	}
 

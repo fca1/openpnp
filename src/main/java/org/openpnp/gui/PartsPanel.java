@@ -352,7 +352,10 @@ public class PartsPanel extends JPanel implements WizardContainer {
                     "Delete " + selections.size() + " parts?", JOptionPane.YES_NO_OPTION);
             if (ret == JOptionPane.YES_OPTION) {
                 for (Part part : selections) {
-                    Configuration.get().removePart(part);
+                	if (part.deleteIsPermit())
+                		{
+                		Configuration.get().removePart(part);
+                		}
                 }
             }
         }
@@ -441,6 +444,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
         		{
         		int vRow = table.convertRowIndexToView(row);
         		table.getSelectionModel().setSelectionInterval(vRow, vRow);
+        		
         		table.scrollRectToVisible(new Rectangle(table.getCellRect(vRow, 0, true)));
         		}
         	}

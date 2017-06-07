@@ -269,12 +269,16 @@ public class CameraView extends JComponent implements CameraListener {
     public void setCamera(Camera camera) {
         // turn off capture for the camera we are replacing, if any
         if (this.camera != null) {
+        	this.camera.setLightingColor(Color.BLACK);
             this.camera.stopContinuousCapture(this);
+            
         }
         this.camera = camera;
         // turn on capture for the new camera
         if (this.camera != null) {
+        	this.camera.setLightingColor(Color.WHITE);
             this.camera.startContinuousCapture(this, maximumFps);
+            
         }
     }
 

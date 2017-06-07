@@ -195,8 +195,8 @@ public class OpenCvCamera extends ReferenceCamera implements Runnable {
         final int CV_CAP_PROP_GAIN=14; // Gain of the image (only for cameras).
         final int CV_CAP_PROP_EXPOSURE=15; // Exposure (only for cameras).
         // Modifier la lumiere camera
-        fg.set(CV_CAP_PROP_BRIGHTNESS ,0);
-        fg.set(CV_CAP_PROP_EXPOSURE ,0);
+        //fg.set(CV_CAP_PROP_BRIGHTNESS ,1);
+        //fg.set(CV_CAP_PROP_EXPOSURE ,1);
         //fg.set(Highgui.CV_CAP_PROP_SETTINGS ,1);   // For test only, that's work apparently
         
         thread = new Thread(this);

@@ -48,6 +48,8 @@ public class Part extends AbstractModelObject implements Identifiable {
     @Attribute(required = false)
     private double speed = 1.0;
 
+    @Attribute(required = false)
+    private boolean deleteIsPermit = true;
 
 
     @SuppressWarnings("unused")
@@ -97,13 +99,24 @@ public class Part extends AbstractModelObject implements Identifiable {
         this.speed = speed;
         firePropertyChange("speed", oldValue, speed);
     }
-
+    
+    public void setDeleteIsPermit(boolean isPermit)
+    	{
+        Object oldValue = this.deleteIsPermit;
+        this.deleteIsPermit= isPermit;
+        firePropertyChange("deleteIsPermit", oldValue, isPermit);
+	
+    	}
     public Length getHeight() {
     	if (height==0)
     		{
     		return getPackage().getHeight();
     		}
         return new Length(height, heightUnits);
+    }
+    public boolean deleteIsPermit()
+    {
+    	return this.deleteIsPermit;
     }
 
     public void setHeight(Length height) {

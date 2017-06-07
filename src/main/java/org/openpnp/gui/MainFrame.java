@@ -580,10 +580,10 @@ public class MainFrame extends JFrame {
     private void registerBoardImporters() {
         registerBoardImporter(EagleBoardImporter.class);
         registerBoardImporter(EagleMountsmdUlpImporter.class);
-        registerBoardImporter(KicadPosImporter.class);
-        registerBoardImporter(DipTraceImporter.class);
-        registerBoardImporter(NamedCSVImporter.class);
-        registerBoardImporter(SolderPasteGerberImporter.class);
+  //      registerBoardImporter(KicadPosImporter.class);
+  //      registerBoardImporter(DipTraceImporter.class);
+  //      registerBoardImporter(NamedCSVImporter.class);
+  //      registerBoardImporter(SolderPasteGerberImporter.class);
     }
 
     /**

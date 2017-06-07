@@ -18,12 +18,16 @@ import org.openpnp.machine.reference.ReferenceHeadMountable;
 import org.openpnp.machine.reference.ReferenceNozzle;
 import org.openpnp.machine.reference.driver.AbstractSerialPortDriver;
 import org.openpnp.machine.reference.driver.GcodeDriver.Axis;
+import org.openpnp.machine.reference.vision.ReferenceBottomVision;
+import org.openpnp.machine.reference.vision.ReferenceBottomVision.PartSettings;
 import org.openpnp.model.Configuration;
 import org.openpnp.model.LengthUnit;
 import org.openpnp.model.Location;
 import org.openpnp.model.Part;
 import org.openpnp.spi.Camera;
 import org.openpnp.spi.Nozzle;
+import org.openpnp.spi.PartAlignment;
+import org.openpnp.spi.PartAlignment.PartAlignmentOffset;
 import org.openpnp.spi.PropertySheetHolder;
 import org.openpnp.util.VisionUtils;
 import org.simpleframework.xml.Attribute;
@@ -159,12 +163,6 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     
     
     private Location tuningHome(ReferenceHead head,Location partFiducial) throws Exception {
-        /*
-         * The head camera for nozzle-1 should now be (if everything has homed correctly) directly
-         * above the homing pin in the machine bed, use the head camera scan for this and make sure
-         * this is exactly central - otherwise we move the camera until it is, and then reset all
-         * the axis back to 0,0,0,0 as this is calibrated home.
-         */
         Part homePart = Configuration.get().getPart("FIDUCIAL-HOME");
         if (homePart != null) {
         	//locationFiducial = Configuration.get().getMachine().getFiducialLocator().
@@ -173,6 +171,16 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
             return correctLocation;
 
         }
+
+    	
+        
+    	
+        /*
+         * The head camera for nozzle-1 should now be (if everything has homed correctly) directly
+         * above the homing pin in the machine bed, use the head camera scan for this and make sure
+         * this is exactly central - otherwise we move the camera until it is, and then reset all
+         * the axis back to 0,0,0,0 as this is calibrated home.
+         */
 		return null;
     	
     }
@@ -183,7 +191,6 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     	
     	
     	waitMachineReady(sendCommand(HOMEAB_CMD, 1000),10*1000);
-       waitMachineReady(sendCommand(HOMEXY_CMD, 1000),30*1000);
         if (homeZ) {
             // Home Z
             waitMachineReady(sendCommand(HOMEZ_CMD, 1000),10*1000);
@@ -195,35 +202,30 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
             // And wait a tick just to let things settle down
             Thread.sleep(250);
         }
+        waitMachineReady(sendCommand(HOMEXY_CMD, 1000),30*1000);
         
         // Update position
         getCurrentPosition();
         limitMachine = new Location(LengthUnit.Millimeters,-999.9,-9999.9,0,0);
-        // Home X and Y
-    	Location tmp = new Location(LengthUnit.Millimeters, 69,41, 0.0, 0.0);   //VENOM
-    	
-    	
-    	
-    	
-    	Location result = tuningHome(head,tmp);
-    	
-    	
-    	
-    	if (result==null)
-    		{
-    		throw new Exception("Homing fiducial is not detected");
-    		}
-    	if (result.getLinearDistanceTo(tmp)>3d)
-    		{
-    		throw new Exception("Imprecision in homing : ecart"+result.getLinearDistanceTo(tmp));
-    		}
-
-    	Location officialLocationPosition =head.getDefaultCamera().getLocation().subtract(head.getDefaultNozzle().getLocation());
         
-    	limitMachine = new Location(LengthUnit.Millimeters,-x,-y,0,0).add(officialLocationPosition).add(new Location(LengthUnit.Millimeters,2,2,0,0));
-    	setPositionXY(officialLocationPosition);
+        
+    	ReferenceBottomVision ref=null;
+        Part nozzlePart = Configuration.get().getPart("detectNozzle");
+        ref =(ReferenceBottomVision) Configuration.get().getMachine().getPartAlignments().get(0);
+        PartAlignmentOffset offset=null;
+        do
+        {
+        offset = ref.findOffsets(nozzlePart, null, null, head.getDefaultNozzle());
+        Location officialLocationPosition = offset.getLocation().add(head.getDefaultCamera().getLocation());
+        setPositionXY(officialLocationPosition);
         getCurrentPosition();
-    	
+        }
+        while(offset.getLocation().getLinearDistanceTo(new Location(LengthUnit.Millimeters))>0.1);
+        Location distance = head.getDefaultNozzle().getLocation().subtract(head.getDefaultCamera().getLocation());
+    	setPositionXY(VisionUtils.getBottomVisionCamera().getLocation().subtract(distance));
+        getCurrentPosition();    
+        head.moveToSafeZ();
+
         }
     
 
