@@ -21,6 +21,10 @@ public class DetectCirclesHough extends CvStage {
 
     @Attribute
     private int maxDiameter = 100;
+    
+    @Attribute (required=false)
+    private int maxNberCandidates=1;
+    
 
     /**
      * Inverse ratio of the accumulator resolution to the image resolution. For example, if dp=1 ,
@@ -57,7 +61,15 @@ public class DetectCirclesHough extends CvStage {
     public int getMinDiameter() {
         return minDiameter;
     }
+    
+    public int getMaxNberCandidate() {
+        return maxNberCandidates;
+    }
 
+    public int setMaxNberCandidate(int maxNberCandidates) {
+        return this.maxNberCandidates=maxNberCandidates;
+    }
+    
     public void setMinDiameter(int minDiameter) {
         this.minDiameter = minDiameter;
     }
@@ -101,7 +113,7 @@ public class DetectCirclesHough extends CvStage {
         Imgproc.HoughCircles(mat, output, Imgproc.CV_HOUGH_GRADIENT, dp, minDistance, param1,
                 param2, minDiameter / 2, maxDiameter / 2);
         List<Result.Circle> circles = new ArrayList<>();
-        for (int i = 0; i < output.cols(); i++) {
+        for (int i = 0; i < Math.min(output.cols(),getMaxNberCandidate()); i++) {
             double[] circle = output.get(0, i);
             double x = circle[0];
             double y = circle[1];

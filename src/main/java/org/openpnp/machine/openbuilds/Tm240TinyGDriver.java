@@ -100,7 +100,7 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     public boolean connected;
     protected LinkedBlockingQueue<String> responseQueue = new LinkedBlockingQueue<>();
     private boolean n1Picked, n2Picked;
-    private Location limitMachine=new Location(LengthUnit.Millimeters,-1000,-1000,0,0);
+    private Location limitMachine=new Location(LengthUnit.Millimeters,0,0,0,0);
     
     
     private void moveAtZ(Nozzle nozzle, double z) throws Exception
@@ -206,23 +206,25 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
         
         // Update position
         getCurrentPosition();
-        limitMachine = new Location(LengthUnit.Millimeters,-999.9,-9999.9,0,0);
+        //limitMachine = new Location(LengthUnit.Millimeters,-999.9,-9999.9,0,0);
         
         
     	ReferenceBottomVision ref=null;
         Part nozzlePart = Configuration.get().getPart("detectNozzle");
         ref =(ReferenceBottomVision) Configuration.get().getMachine().getPartAlignments().get(0);
         PartAlignmentOffset offset=null;
+        // se positionner sur la camera de table, avec le nozzle
         do
         {
         offset = ref.findOffsets(nozzlePart, null, null, head.getDefaultNozzle());
-        Location officialLocationPosition = offset.getLocation().add(head.getDefaultCamera().getLocation());
+        Location officialLocationPosition = offset.getLocation().add(head.getDefaultNozzle().getLocation());
         setPositionXY(officialLocationPosition);
         getCurrentPosition();
         }
         while(offset.getLocation().getLinearDistanceTo(new Location(LengthUnit.Millimeters))>0.1);
-        Location distance = head.getDefaultNozzle().getLocation().subtract(head.getDefaultCamera().getLocation());
-    	setPositionXY(VisionUtils.getBottomVisionCamera().getLocation().subtract(distance));
+        // La precision est ma	intenant dans le niveau qui permet de faire l'origine
+        Location distance = head.getDefaultNozzle().getLocation();
+    	setPositionXY(VisionUtils.getBottomVisionCamera().getLocation());
         getCurrentPosition();    
         head.moveToSafeZ();
 

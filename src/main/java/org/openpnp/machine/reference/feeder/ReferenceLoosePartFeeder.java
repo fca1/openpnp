@@ -91,14 +91,13 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
     
 
     @Override
-    public void feed(Nozzle nozzle,Part part) throws Exception {
+    public void feed(Nozzle nozzle,Part aPart) throws Exception {
         Camera camera = nozzle.getHead().getDefaultCamera();
         // Move to the feeder pick location
         MovableUtils.moveToLocationAtSafeZ(camera, location);
         for (int i = 0; i < 3; i++) {
 
-        	//VEN_FCA            pickLocation = getPickLocation(camera,part);
-            pickLocation = getPickLocation(camera, nozzle);
+            pickLocation = getPickLocation(camera, nozzle,aPart);
             camera.moveTo(pickLocation);
         }
     }
@@ -124,17 +123,19 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         	double pcentRatio = Math.abs((ratioC-ratio)/ratio);
         	if (pcentRatio>PERCENT_RATIO)
         		{
-        		Logger.debug("Ratio measured = "+ratioC+" waited="+ratio+"... footprint suppressed");
+        		Logger.debug("Ratio measured = "+Math.round(100.0*ratioC)/100.0+" waited="+Math.round(100.0*ratio)/100.0+" => candidate suppressed");
         		}
 
         	return pcentRatio>PERCENT_RATIO;
         });
+    	Logger.debug("Nber candidates after ratio filtering : "+filteredResults.size());
+    	Logger.debug("Remove all pattern with a maximum  area error of "+PERCENT_AREA*100.0+" %");
     	filteredResults.removeIf((a) -> {
-        	double pcent = Math.abs((a.size.area()-areaPixels)/areaPixels);
-        	boolean result =pcent>PERCENT_AREA;
+        	double pcent = (a.size.area()-areaPixels)/areaPixels;
+        	boolean result =Math.abs(pcent)>PERCENT_AREA;
         	if (result)
         		{
-        		Logger.debug("Area filtered error of"+(pcent*100.0)+" %");
+        		Logger.debug("Area filtered error of "+Math.round(pcent*100.0)+" %  (positive = the measured is more bigger than the reference given)");
         		}
         	return result;
         });
@@ -144,8 +145,16 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
      
     
     
-    private Location getPickLocation(Camera camera, Nozzle nozzle) throws Exception {
-        org.openpnp.model.Package pack = part.getPackage();
+    private Location getPickLocation(Camera camera, Nozzle nozzle,Part aPart) throws Exception {
+    	org.openpnp.model.Package pack = null;
+    	if (aPart == null)
+    	{
+    		pack = part.getPackage();
+    	}
+    	else
+    	{
+    		pack = aPart.getPackage();
+    	}
 // FCA @TODO if the part has a big value of height, the focal length is not ridiculous and the size of 
 // rectangle increase. 
 // For the test purpose, a factor of correction is given with an absolute value, but later, a method 
@@ -169,12 +178,13 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         pipeline.setNozzle(nozzle);
         pipeline.setFeeder(this);
         pipeline.process();
+        Logger.debug("Search the nearest ratio :");
         // Grab the results
         List<RotatedRect> results = (List<RotatedRect>) pipeline.getResult("results").model;
         Logger.debug("Number of rectangles detected : "+results.size());
-        Logger.debug("fillter of part : "+part.getName());
+        Logger.debug("fillter of part : "+aPart.getName());
         List<RotatedRect> filteredResults =filterDimensionRotatedRect(results,ratio,areaPackagePixels);
-        Logger.debug("Number of rectangles filtered : "+results.size()+ " ratio = "+ratio+" sizeArea="+areaPackagePixels);
+        Logger.debug("Number of rectangles  filtered : "+filteredResults.size()+ "            ratio = "+ratio+" sizeArea="+areaPackagePixels);
         
         
         
@@ -189,13 +199,16 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         
         
         if (filteredResults.isEmpty()) {
-        	double errorPcent = 0;
+        	double errorPcent = 100;
         	if (!results.isEmpty())
         		{
-        		errorPcent = Math.round(Math.abs((results.get(0).size.area()-areaPackagePixels)/areaPackagePixels));
+        		errorPcent = Math.round(Math.abs(100.0*(results.get(0).size.area()-areaPackagePixels)/areaPackagePixels));
+                Logger.debug("The nearest candidate is near of " + errorPcent + " %");
         		}
         		throw new Exception("Feeder " + getName() + ": No parts found. near Area="+errorPcent+" %");
         		}
+        
+        
         filteredResults.sort((a, b) -> {
             Double da = Math.abs(a.size.area()-areaPackagePixels);
             Double db = Math.abs(b.size.area()-areaPackagePixels); 
