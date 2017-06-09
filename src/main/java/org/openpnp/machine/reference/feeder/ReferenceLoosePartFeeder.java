@@ -160,7 +160,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
 // For the test purpose, a factor of correction is given with an absolute value, but later, a method 
 // to find the good constant value (simple thales) must be providen.
 // @TODO change the method        
-        final double correctionFocale =1.0-part.getPackage().getHeight().getValue()*0.01;  
+        final double correctionFocale =1.0-pack.getHeight().getValue()*0.01;  
         final double unitsPerSquarePixels = camera.getUnitsPerPixel().getY()*camera.getUnitsPerPixel().getX()*(correctionFocale*correctionFocale);
         final double areaPackagePixels = pack.getFootprint().getBodyArea()/unitsPerSquarePixels;
         final double ratio = pack.getFootprint().getMinusRatio();
@@ -269,7 +269,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         location =
                 location.derive(null, null,
                         this.location.convertToUnits(location.getUnits()).getZ()
-                                + part.getPackage().getHeight().convertToUnits(location.getUnits()).getValue(),
+                                + pack.getHeight().convertToUnits(location.getUnits()).getValue(),
                         null);
         MainFrame.get().getCameraViews().getCameraView(camera)
                 .showFilteredImage(OpenCvUtils.toBufferedImage(pipeline.getWorkingImage()), 250);
