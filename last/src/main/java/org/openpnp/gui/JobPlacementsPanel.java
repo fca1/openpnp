@@ -360,10 +360,11 @@ public class JobPlacementsPanel extends JPanel {
                 Camera camera = MainFrame.get().getMachineControls().getSelectedTool().getHead()
                         .getDefaultCamera();
                 MovableUtils.moveToLocationAtSafeZ(camera, location);
-                Helpers.selectNextTableRow(table);
-                if (comp != null) {
-                    comp.requestFocus();
-                }
+                	Helpers.selectNextTableRow(table);
+                	if (comp != null) {
+                		comp.requestFocus();
+                		}
+                	
             });
         };
     };

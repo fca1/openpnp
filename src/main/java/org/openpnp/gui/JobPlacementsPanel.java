@@ -433,8 +433,17 @@ public class JobPlacementsPanel extends JPanel {
                 Camera camera = MainFrame.get().getMachineControls().getSelectedTool().getHead()
                         .getDefaultCamera();
                 MovableUtils.moveToLocationAtSafeZ(camera, location);
-                Helpers.selectNextTableRow(table);
-                if (comp != null) {
+                // search next part with the same side. 
+                Side currentSide = getSelection().getSide();
+                String id  = getSelection().getId();
+                	do { //FCA
+                	Helpers.selectNextTableRow(table);
+                	if (id == getSelection().getId())
+                		{
+                		break;
+                		}
+                	} while((getSelection().getSide()!=currentSide)||(getSelection().getType()==Type.Ignore));              
+                	if (comp != null) {
                     comp.requestFocus();
                 }
             });
@@ -586,7 +595,7 @@ public class JobPlacementsPanel extends JPanel {
     public final Action setRotationAction = new AbstractAction() {
         {
             putValue(NAME, "Set Rotation");
-            putValue(SHORT_DESCRIPTION, "Remove rotation more than 180°...");
+            putValue(SHORT_DESCRIPTION, "Remove rotation more than 180ï¿½...");
         }
 
         @Override
@@ -597,7 +606,7 @@ public class JobPlacementsPanel extends JPanel {
 
         public SetRotationAction() {
             putValue(NAME, "Rotation modulo");
-            putValue(SHORT_DESCRIPTION, "Remove rotation more than 180°" );
+            putValue(SHORT_DESCRIPTION, "Remove rotation more than 180ï¿½" );
         }
 
         @Override

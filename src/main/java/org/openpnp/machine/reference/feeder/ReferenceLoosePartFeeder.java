@@ -178,13 +178,13 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         pipeline.setNozzle(nozzle);
         pipeline.setFeeder(this);
         pipeline.process();
-        Logger.debug("Search the nearest ratio :");
+        Logger.trace("Search the nearest ratio :");
         // Grab the results
         List<RotatedRect> results = (List<RotatedRect>) pipeline.getResult("results").model;
-        Logger.debug("Number of rectangles detected : "+results.size());
+        Logger.trace("Number of rectangles detected : "+results.size());
         Logger.debug("fillter of part : "+aPart.getName());
         List<RotatedRect> filteredResults =filterDimensionRotatedRect(results,ratio,areaPackagePixels);
-        Logger.debug("Number of rectangles  filtered : "+filteredResults.size()+ "            ratio = "+ratio+" sizeArea="+areaPackagePixels);
+        Logger.trace("Number of rectangles  filtered : "+filteredResults.size()+ "            ratio = "+ratio+" sizeArea="+areaPackagePixels);
         
         
         
@@ -241,7 +241,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
         boolean isSquare = Math.abs(ratio-1.0)<0.1;	// Si le ratio est <10%, ne plus considerer le rectangle
 		if (isSquare)
 		{
-			Logger.debug("Detection square Angle = "+angle);
+			Logger.trace("Detection square Angle = "+angle);
 			// A square cannot have an angle high than +/- 45�
 			angle = -angle;  // l'angle est toujours negatif
 			if (angle>45)
@@ -254,7 +254,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
 			if ((result.size.width < result.size.height))  // FCA l'angle d'un rectangle 0� = cote long
 				{
 				angle-=90;
-				Logger.debug("Detection rectangle Angle = "+angle);
+				Logger.trace("Detection rectangle Angle = "+angle);
 				}
 			angle=Math.abs(angle);
 			if ((angle>90))
@@ -262,6 +262,7 @@ public class ReferenceLoosePartFeeder extends ReferenceFeeder {
 				angle-=180;
 				}
 			}
+		Logger.trace("Detection rectangle Angle final = "+angle);
         
         location = location.derive(null, null, null, angle);
         // Update the location with the correct Z, which is the configured Location's Z
