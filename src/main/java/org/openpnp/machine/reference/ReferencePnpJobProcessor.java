@@ -685,7 +685,9 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
 //                    location = location.derive(null, null, null,
 //                            plannedPlacement.alignmentOffsets.getLocation().getRotation());
 //                    placementLocation = location;
-                	placementLocation = placementLocation.subtractWithRotation(plannedPlacement.alignmentOffsets.getLocation());
+                    // FCA VENOM A TESTER
+                	placementLocation = placementLocation.add(plannedPlacement.alignmentOffsets.getLocation());
+                	placementLocation = placementLocation.subtractWithRotation(plannedPlacement.alignmentOffsets.getLocation().derive(0.0,0.0,0.0,null));
                 	placementLocation = placementLocation.addWithRotation(location.derive(0.0,0.0,0.0,null));
                 }
                 else

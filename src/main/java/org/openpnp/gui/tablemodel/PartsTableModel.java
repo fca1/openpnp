@@ -101,7 +101,7 @@ public class PartsTableModel extends AbstractTableModel implements PropertyChang
         Part part = parts.get(row);
         switch (col) {
             case 0:
-            	if (!part.deleteIsPermit())
+            	if (!part.isReadonly())
             		{
             		return "<html><font color=red size=\"4\">" +part.getId()+"</font></html>";
             		}

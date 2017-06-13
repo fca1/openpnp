@@ -48,7 +48,7 @@ public class ReferenceBottomVision implements PartAlignment {
     protected boolean enabled = false;
 
     @Attribute(required = false)
-    protected boolean preRotate = true;
+    protected boolean preRotate = false;
 
     @ElementMap(required = false)
     protected Map<String, PartSettings> partSettingsByPartId = new HashMap<>();
@@ -107,8 +107,14 @@ public class ReferenceBottomVision implements PartAlignment {
         	Logger.debug("Result circle {}", s);	
         	rect.center.x = s.x;
         	rect.center.y = s.y;
-        	preRotate = false;
-        	//rect.angle = preRotate?preRotateAngle:0;
+            Location offsets = VisionUtils.getPixelCenterOffsets(camera, rect.center.x, rect.center.y);
+            CameraView cameraView = MainFrame.get()
+                    .getCameraViews()
+                    .getCameraView(camera);
+           String res= "distance="+offsets.getLinearDistanceTo(new Location(LengthUnit.Millimeters))+"mm";
+           cameraView.showFilteredImage(OpenCvUtils.toBufferedImage(pipeline.getWorkingImage()), res,
+        		   2500);
+           return new PartAlignmentOffset(offsets,preRotate||postRotate);
         	
         	
         }
@@ -294,8 +300,19 @@ public class ReferenceBottomVision implements PartAlignment {
 
         @Element
         protected CvPipeline pipeline;
+        
+        @Attribute (required=false) 
+        protected boolean readonly;
 
-        public PartSettings() {
+        public boolean isReadonly() {
+			return readonly;
+		}
+
+		public void setReadonly(boolean readonly) {
+			this.readonly = readonly;
+		}
+
+		public PartSettings() {
 
         }
 

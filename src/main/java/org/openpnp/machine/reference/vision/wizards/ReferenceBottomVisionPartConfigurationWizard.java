@@ -38,6 +38,7 @@ public class ReferenceBottomVisionPartConfigurationWizard extends AbstractConfig
     private final PartSettings partSettings;
 
     private JCheckBox enabledCheckbox;
+    private JCheckBox readOnlyCheckbox;
     private JCheckBox chckbxCenterAfterTest;
 
     public ReferenceBottomVisionPartConfigurationWizard(ReferenceBottomVision bottomVision,
@@ -53,6 +54,7 @@ public class ReferenceBottomVisionPartConfigurationWizard extends AbstractConfig
         panel.setLayout(new FormLayout(
                 new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("right:default"),
                         FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
+                        FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
                         FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,},
                 new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
                         FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
@@ -63,6 +65,12 @@ public class ReferenceBottomVisionPartConfigurationWizard extends AbstractConfig
 
         enabledCheckbox = new JCheckBox("");
         panel.add(enabledCheckbox, "4, 2");
+        
+        JLabel lblreadOnly = new JLabel("Read only?");
+        panel.add(lblreadOnly, "6, 2");
+
+        readOnlyCheckbox = new JCheckBox("");
+        panel.add(readOnlyCheckbox, "8, 2");
 
         JButton btnTestAlighment = new JButton("Test Alignment");
         btnTestAlighment.addActionListener((e) -> {
@@ -99,7 +107,10 @@ public class ReferenceBottomVisionPartConfigurationWizard extends AbstractConfig
                     null, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (result == JOptionPane.YES_OPTION) {
                 UiUtils.messageBoxOnException(() -> {
-                    partSettings.setPipeline(bottomVision.getPipeline().clone());
+                	if (!readOnlyCheckbox.isSelected())
+                		{
+                		partSettings.setPipeline(bottomVision.getPipeline().clone());
+                		}
                     editPipeline();
                 });
             }
@@ -179,6 +190,7 @@ public class ReferenceBottomVisionPartConfigurationWizard extends AbstractConfig
 
     @Override
     public void createBindings() {
+        addWrappedBinding(partSettings, "readonly", readOnlyCheckbox, "selected");
         addWrappedBinding(partSettings, "enabled", enabledCheckbox, "selected");
     }
 }

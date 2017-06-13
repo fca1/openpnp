@@ -440,6 +440,7 @@ public class JobPlacementsPanel extends JPanel {
                 	Helpers.selectNextTableRow(table);
                 	if (id == getSelection().getId())
                 		{
+                		// This is the same selected line, next row doesnt exist.
                 		break;
                 		}
                 	} while((getSelection().getSide()!=currentSide)||(getSelection().getType()==Type.Ignore));              

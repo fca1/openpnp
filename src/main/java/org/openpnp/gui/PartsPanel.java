@@ -352,7 +352,7 @@ public class PartsPanel extends JPanel implements WizardContainer {
                     "Delete " + selections.size() + " parts?", JOptionPane.YES_NO_OPTION);
             if (ret == JOptionPane.YES_OPTION) {
                 for (Part part : selections) {
-                	if (part.deleteIsPermit())
+                	if (part.isReadonly())
                 		{
                 		Configuration.get().removePart(part);
                 		}

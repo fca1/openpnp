@@ -21,6 +21,7 @@ import org.openpnp.util.UiUtils;
 import org.openpnp.util.VisionUtils;
 import org.openpnp.vision.pipeline.CvPipeline;
 import org.openpnp.vision.pipeline.ui.CvPipelineEditor;
+import org.pmw.tinylog.Logger;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -87,10 +88,17 @@ public class ReferenceBottomVisionConfigurationWizard extends AbstractConfigurat
                     "This will replace all custom part pipelines with the current pipeline. Are you sure?",
                     null, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (result == JOptionPane.YES_OPTION) {
-                UiUtils.messageBoxOnException(() -> {
+                UiUtils.messageBoxOnException(() -> {yytyt
                     for (PartSettings partSettings : bottomVision.getPartSettingsByPartId()
-                            .values()) {
-                        partSettings.setPipeline(bottomVision.getPipeline().clone());
+                            .values()) {     
+                    	if (partSettings.isReadOnly()==false)
+                    		{
+                    		partSettings.setPipeline(bottomVision.getPipeline().clone());
+                    		}
+                    	else
+                    		{
+                    		Logger.info("the partSetting:"+partSettings+" is readonly");
+                    		}
                     }
                     MessageBoxes.infoBox("Parts Reset",
                             "All custom part pipelines have been reset.");

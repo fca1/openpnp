@@ -89,6 +89,7 @@ public class OpenCvCamera extends ReferenceCamera implements Runnable {
     @Override
     public synchronized void startContinuousCapture(CameraListener listener, int maximumFps) {
         if (thread == null) {
+        	Thread.yield();
             initCamera();
         }
         super.startContinuousCapture(listener, maximumFps);
@@ -152,7 +153,11 @@ public class OpenCvCamera extends ReferenceCamera implements Runnable {
                 Logger.debug("Camera {} reports height {}", this, fg.get(Highgui.CV_CAP_PROP_FRAME_HEIGHT));
             }
             
-            fg.open(deviceIndex);
+            if (fg.open(deviceIndex)==false)
+            	{
+            	Logger.error("Camera with buffer index :"+deviceIndex+ " is not connected");
+            	System.exit(1);
+            	}
             
             for (OpenCvCaptureProperty property : OpenCvCaptureProperty.values()) {
                 Logger.trace("{} {} = {}", this, property, getOpenCvCapturePropertyValue(property));
