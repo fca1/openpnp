@@ -71,10 +71,10 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     
 
     @Attribute(required = false)
-    protected double feedRateMmPerMinute = 80000;
-    
+    protected double feedRateMmPerMinute = 10000;
+    // Choix de la rotation 
     @Attribute(required = false)
-    protected double feedRateMmPerMinuteRotation = 80000;
+    protected double feedRateMmPerMinuteRotation = 40000;
 
     @Attribute(required = false)
     protected double feedRateMmPerMinuteZ = 1000;
@@ -391,7 +391,7 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
         }
 
         if (sb.length() > 0) {
-
+        	feedRateMmPerMinute = 10000;
             sb.append(String.format(Locale.US, "F%2.0f", feedRateMmPerMinute * speed));
         	waitMachineReady(sendCommand(
     				String.format(Locale.US, "G1 " + sb.toString())),10000);

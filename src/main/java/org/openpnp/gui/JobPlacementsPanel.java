@@ -416,9 +416,9 @@ public class JobPlacementsPanel extends JPanel {
     public final Action moveCameraToPlacementLocationNext = new AbstractAction() {
         {
             putValue(SMALL_ICON, Icons.centerCameraMoveNext);
-            putValue(NAME, "Move Camera To Placement Location and Move to Next Part");
+            putValue(NAME, "Move to Next Part and move Camera To Placement Location");
             putValue(SHORT_DESCRIPTION,
-                    "Position the camera at the placement's location and move to next part.");
+                    "Move to next part and Position the camera at the placement's location.");
         }
 
         @Override
@@ -427,13 +427,8 @@ public class JobPlacementsPanel extends JPanel {
                 // Need to keep current focus owner so that the space bar can be
                 // used after the initial click. Otherwise, button focus is lost
                 // when table is updated
-                Component comp = MainFrame.get().getFocusOwner();
-                Location location = Utils2D.calculateBoardPlacementLocation(boardLocation,
-                        getSelection().getLocation());
-                Camera camera = MainFrame.get().getMachineControls().getSelectedTool().getHead()
-                        .getDefaultCamera();
-                MovableUtils.moveToLocationAtSafeZ(camera, location);
                 // search next part with the same side. 
+                Component comp = MainFrame.get().getFocusOwner();
                 Side currentSide = getSelection().getSide();
                 String id  = getSelection().getId();
                 	do { //FCA
@@ -446,6 +441,11 @@ public class JobPlacementsPanel extends JPanel {
                 	} while((getSelection().getSide()!=currentSide)||(getSelection().getType()==Type.Ignore));              
                 	if (comp != null) {
                     comp.requestFocus();
+                Location location = Utils2D.calculateBoardPlacementLocation(boardLocation,
+                        getSelection().getLocation());
+                Camera camera = MainFrame.get().getMachineControls().getSelectedTool().getHead()
+                        .getDefaultCamera();
+                MovableUtils.moveToLocationAtSafeZ(camera, location);
                 }
             });
         };

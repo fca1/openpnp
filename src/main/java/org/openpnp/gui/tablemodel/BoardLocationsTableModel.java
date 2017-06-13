@@ -84,8 +84,8 @@ public class BoardLocationsTableModel extends AbstractTableModel {
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         if (job.isUsingPanel()) {
-            if (rowIndex >= 1) {
-                return false;
+            if ((rowIndex >= 1)&& (columnIndex != 8)) {
+                return false;	
             }
         }
         return (columnIndex != 0);

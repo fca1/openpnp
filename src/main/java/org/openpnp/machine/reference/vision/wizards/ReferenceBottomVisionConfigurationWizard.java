@@ -47,6 +47,7 @@ public class ReferenceBottomVisionConfigurationWizard extends AbstractConfigurat
                         FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,},
                 new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
                         FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
                         FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,}));
 
         JLabel lblEnabled = new JLabel("Enabled?");
@@ -106,6 +107,9 @@ public class ReferenceBottomVisionConfigurationWizard extends AbstractConfigurat
             }
         });
         panel.add(btnResetAllTo, "8, 4");
+        
+        
+
         
         JLabel lblPreRot = new JLabel("Rotate parts prior to vision?");
         panel.add(lblPreRot, "2, 6");
