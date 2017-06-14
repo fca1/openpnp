@@ -16,6 +16,7 @@ import org.openpnp.machine.reference.ReferenceActuator;
 import org.openpnp.machine.reference.ReferenceHead;
 import org.openpnp.machine.reference.ReferenceHeadMountable;
 import org.openpnp.machine.reference.ReferenceNozzle;
+import org.openpnp.machine.reference.ReferenceNozzleTip;
 import org.openpnp.machine.reference.driver.AbstractSerialPortDriver;
 import org.openpnp.machine.reference.driver.GcodeDriver.Axis;
 import org.openpnp.machine.reference.vision.ReferenceBottomVision;
@@ -26,6 +27,7 @@ import org.openpnp.model.Location;
 import org.openpnp.model.Part;
 import org.openpnp.spi.Camera;
 import org.openpnp.spi.Nozzle;
+import org.openpnp.spi.NozzleTip;
 import org.openpnp.spi.PartAlignment;
 import org.openpnp.spi.PartAlignment.PartAlignmentOffset;
 import org.openpnp.spi.PropertySheetHolder;
@@ -206,28 +208,35 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
         
         // Update position
         getCurrentPosition();
-        //limitMachine = new Location(LengthUnit.Millimeters,-999.9,-9999.9,0,0);
+        limitMachine = new Location(LengthUnit.Millimeters,-999.9,-9999.9,0,0);
         
-        
-    	ReferenceBottomVision ref=null;
-        Part nozzlePart = Configuration.get().getPart("detectNozzle");
-        ref =(ReferenceBottomVision) Configuration.get().getMachine().getPartAlignments().get(0);
-        PartAlignmentOffset offset=null;
-        // se positionner sur la camera de table, avec le nozzle
-        do
-        {
-        offset = ref.findOffsets(nozzlePart, null, null, head.getDefaultNozzle());
-        Location officialLocationPosition = offset.getLocation().add(head.getDefaultNozzle().getLocation());
-        setPositionXY(officialLocationPosition);
-        getCurrentPosition();
-        }
-        while(offset.getLocation().getLinearDistanceTo(new Location(LengthUnit.Millimeters))>0.1);
-        // La precision est ma	intenant dans le niveau qui permet de faire l'origine
-        Location distance = head.getDefaultNozzle().getLocation();
-    	setPositionXY(VisionUtils.getBottomVisionCamera().getLocation());
-        getCurrentPosition();    
-        head.moveToSafeZ();
 
+        
+        // Recherche offset nozzle
+        ReferenceNozzleTip  s =(ReferenceNozzleTip) head.getDefaultNozzle().getNozzleTip();
+        if (s.getCalibration().isEnabled()==false)
+        	{
+        	throw new Exception("Calibration de NozzleTip non active");
+        	}
+        // faire une calibration
+        s.getCalibration().reset();
+		s.getCalibration().calibrate(s);
+		// Forcer le positionnement xy de la table en indiquant que c'est le moteur
+    	setPositionXY(VisionUtils.getBottomVisionCamera().getLocation());
+    	// remettre a jour les coordonnees internes de la mahine avec celle de la carte gestion moteur 
+        getCurrentPosition();
+        // Supprimer la calibration pour reprendre tout depuis le debut car l'offset est corrigé par le placement sur la camera
+        s.getCalibration().reset();
+        for (Nozzle nozzle : head.getNozzles())
+        	{
+        	ReferenceNozzle r1 = (ReferenceNozzle)nozzle; 
+        	for (NozzleTip tip : r1.getNozzleTips())
+        		{
+        		ReferenceNozzleTip t1 = (ReferenceNozzleTip)tip;
+        		t1.getCalibration().calibrate(t1);
+        		}
+        	}
+        head.moveToSafeZ();
         }
     
 

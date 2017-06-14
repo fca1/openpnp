@@ -292,7 +292,7 @@ public class ReferenceNozzleTip extends AbstractNozzleTip {
         private CvPipeline pipeline = createDefaultPipeline();
 
         @Attribute(required = false)
-        private double angleIncrement = 15;
+        private double angleIncrement = 45;
         
         @Attribute(required = false)
         private boolean enabled;
