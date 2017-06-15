@@ -13,6 +13,7 @@ import javax.swing.Action;
 import org.openpnp.gui.support.PropertySheetWizardAdapter;
 import org.openpnp.gui.support.Wizard;
 import org.openpnp.machine.reference.ReferenceActuator;
+import org.openpnp.machine.reference.ReferenceCamera;
 import org.openpnp.machine.reference.ReferenceHead;
 import org.openpnp.machine.reference.ReferenceHeadMountable;
 import org.openpnp.machine.reference.ReferenceNozzle;
@@ -169,7 +170,10 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
         if (homePart != null) {
         	//locationFiducial = Configuration.get().getMachine().getFiducialLocator().
             Location correctLocation = Configuration.get().getMachine().getFiducialLocator().getHomeFiducialLocation(partFiducial, homePart);
-            getCurrentPosition();
+            Location offset = partFiducial.subtract(correctLocation);
+            ReferenceCamera cam =(ReferenceCamera) head.getDefaultCamera();
+            Location locCam = cam.getHeadOffsets();
+            cam.setHeadOffsets(locCam.add(offset));
             return correctLocation;
 
         }
@@ -190,6 +194,7 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
 
     @Override
     public void home(ReferenceHead head) throws Exception {
+    	
     	
     	
     	waitMachineReady(sendCommand(HOMEAB_CMD, 1000),10*1000);
@@ -237,6 +242,12 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
         		}
         	}
         head.moveToSafeZ();
+        
+        ReferenceNozzle rf1 = (ReferenceNozzle) head.getDefaultNozzle();
+        
+    	Location partFiducial= new Location(LengthUnit.Millimeters).derive(43.093,39.129,0.0,0.0).add(rf1.getHeadOffsets());
+    	tuningHome(head,partFiducial);
+
         }
     
 
