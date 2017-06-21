@@ -85,6 +85,8 @@ public interface Head extends Identifiable, Named, WizardConfigurable, PropertyS
      * positions.
      */
     void home() throws Exception;
+    
+    void calibrate() throws Exception;
 
     public void addCamera(Camera camera) throws Exception;
 

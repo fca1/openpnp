@@ -86,4 +86,6 @@ public interface Feeder extends Identifiable, Named, WizardConfigurable, Propert
     
     public default boolean canHandle(Part candidate)  { return candidate== getPart(); }
 
+	public default void reinitialize() {}
+
 }

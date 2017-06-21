@@ -154,6 +154,7 @@ public class MachineControlsPanel extends JPanel {
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         homeAction.setEnabled(enabled);
+        calibrateAction.setEnabled(enabled);
         jogControlsPanel.setEnabled(enabled);
         targetCameraAction.setEnabled(enabled);
         targetToolAction.setEnabled(enabled);
@@ -291,6 +292,24 @@ public class MachineControlsPanel extends JPanel {
             });
         }
     };
+    
+    @SuppressWarnings("serial")
+    public Action calibrateAction = new AbstractAction("Calibre", Icons.centerCamera) {
+        {
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F8,
+                    Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            UiUtils.submitUiMachineTask(() -> {
+                selectedTool.getHead().calibrate();
+                startStopMachineAction.putValue(Action.SMALL_ICON, Icons.powerOff);
+            });
+        }
+    };
+
+    
 
     @SuppressWarnings("serial")
     public Action targetToolAction = new AbstractAction(null, Icons.centerTool) {

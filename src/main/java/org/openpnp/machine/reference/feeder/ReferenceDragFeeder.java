@@ -81,10 +81,14 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
     @Attribute(required = false)
     protected String actuatorName;
     @Element(required = false)
+    
+    protected String actuatorAfterName;
+    @Element(required = false)
+
     protected Vision vision = new Vision();
     @Element(required = false)
     protected Length backoffDistance = new Length(0, LengthUnit.Millimeters);    
-
+   
     protected Location pickLocation;
 
     /*
@@ -97,7 +101,8 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
 
     @Override
     public Location getPickLocation() throws Exception {
-        if (pickLocation == null) {
+        if (pickLocation == null) 
+        {
             pickLocation = location;
         }
         return pickLocation;
@@ -122,6 +127,9 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
          */
 
         Actuator actuator = head.getActuatorByName(actuatorName);
+        
+        
+        
 
         if (actuator == null) {
             throw new Exception(String.format("No Actuator found with name %s on feed Head %s",
@@ -143,6 +151,10 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
                 visionOffset = getVisionOffsets(head, location);
             }
             Logger.debug("visionOffsets " + visionOffset);
+        }
+        else
+        {
+        	visionOffset=null;
         }
 
         // Now we have visionOffsets (if we're using them) so we
@@ -181,6 +193,12 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
 
         // retract the pin
         actuator.actuate(false);
+        
+        Actuator actuatorAN = head.getActuatorByName(actuatorAfterName);
+        if (actuatorAN!=null)
+        	{
+        	actuatorAN.actuate(true);
+        	}
 
         if (vision.isEnabled()) {
             visionOffset = getVisionOffsets(head, location);
@@ -191,7 +209,15 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
         Logger.debug("Modified pickLocation {}", pickLocation);
     }
 
-    // TODO: Throw an Exception if vision fails.
+    public String getActuatorAfterName() {
+		return actuatorAfterName;
+	}
+
+	public void setActuatorAfterName(String actuatorAfterName) {
+		this.actuatorAfterName = actuatorAfterName;
+	}
+
+	// TODO: Throw an Exception if vision fails.
     private Location getVisionOffsets(Head head, Location pickLocation) throws Exception {
         Logger.debug("getVisionOffsets({}, {})", head.getName(), pickLocation);
         // Find the Camera to be used for vision
@@ -457,7 +483,15 @@ public class ReferenceDragFeeder extends ReferenceFeeder {
 
 	@Override
 	public void feed(Nozzle nozzle, Part part) throws Exception {
-		// TODO Auto-generated method stub
+		feed(nozzle);
 		
 	}
+
+	@Override
+	public void reinitialize() {
+		pickLocation = null;	// Force a reprendre les nouvelles valeurs pour le pick
+		visionOffset = null;    // force a reprendre une image
+		super.reinitialize();
+	}
+	
 }

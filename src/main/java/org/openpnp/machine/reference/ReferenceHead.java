@@ -53,6 +53,15 @@ public class ReferenceHead extends AbstractHead {
     }
 
     @Override
+    public void calibrate() throws Exception {
+        Logger.debug("{}.calibrate()", getName());
+        driver.calibrate(this);
+        machine.fireMachineHeadActivity(this);
+    }
+    
+    
+    
+    @Override
     public void home() throws Exception {
         Logger.debug("{}.home()", getName());
         driver.home(this);

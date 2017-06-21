@@ -246,6 +246,14 @@ public class JogControlsPanel extends JPanel {
         homeButton.setIcon(Icons.home);
         homeButton.setHideActionText(true);
         panelControls.add(homeButton, "2, 2");
+        
+        JButton calibrateButtonMire = new JButton(machineControlsPanel.calibrateAction);
+        calibrateButtonMire.setIcon(Icons.centerCamera);
+        calibrateButtonMire.setToolTipText("Calibre la camera de tete par rapport à une mire");
+        calibrateButtonMire.setHideActionText(true);
+        panelControls.add(calibrateButtonMire, "4, 2");
+        
+        
 
         JLabel lblXy = new JLabel("X/Y");
         lblXy.setFont(new Font("Lucida Grande", Font.PLAIN, 22));

@@ -39,7 +39,7 @@ import org.pmw.tinylog.Logger;
 
 public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnable {
     
-    static final double SAFE_QUICK_Z=1.5;
+    static final double SAFE_QUICK_Z=0.5;
     
     
 	static String patternMachineReady = ".*(?:Ready|Stop).*";
@@ -191,7 +191,12 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     	
     }
     
-
+    @Override
+    public void calibrate(ReferenceHead head) throws Exception {
+    ReferenceNozzle rf1 = (ReferenceNozzle) head.getDefaultNozzle();
+    	Location partFiducial= new Location(LengthUnit.Millimeters).derive(44.093,39.129,0.0,0.0).add(rf1.getHeadOffsets());
+    	tuningHome(head,partFiducial);
+    }
     @Override
     public void home(ReferenceHead head) throws Exception {
     	
@@ -242,12 +247,8 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
         		}
         	}
         head.moveToSafeZ();
-        
-        ReferenceNozzle rf1 = (ReferenceNozzle) head.getDefaultNozzle();
-        
-    	Location partFiducial= new Location(LengthUnit.Millimeters).derive(43.093,39.129,0.0,0.0).add(rf1.getHeadOffsets());
-    	tuningHome(head,partFiducial);
-
+        calibrate(head);
+    
         }
     
 
@@ -256,16 +257,31 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     public void actuate(ReferenceActuator actuator, boolean on) throws Exception {
          if (actuator.getIndex() == 0) {
         	 sendCommand(on ? "$out3=1" : "$out3=0");
-        	 Thread.sleep(600);
-        	 if (getStateOfNeedle()==!on)
+    		 Thread.sleep(600);
+        	 // Chercher pendant 1 seconde
+        	 long tms = System.currentTimeMillis();
+        	 boolean flagOk=false;
+        	 do
         	 	{
-        		throw new Exception("Needle is blocked"); 
+        		 if (getStateOfNeedle()==on)
+        	 	{
+        		flagOk=true;
+        		break;
         	 	}
+        		 Thread.sleep(600);
+        	 	}
+        	while(System.currentTimeMillis()-tms<1400);
+        	if (!flagOk)
+        		{
+        		throw new Exception("Needle is blocked"); 
+        		}
          }
-         if (actuator.getIndex() == 1) {
+         if (actuator.getIndex() == 1 && on==true) {
+        	 Thread.sleep(600);
         	 sendCommand("G91");
         	 sendCommand("G0 C5");
         	 sendCommand("G90");
+    		 Thread.sleep(1500);
          }
     }
 
@@ -403,7 +419,7 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
                 		{
                 		waitMachineReady(sendCommand(
                 				// FCA_VENOM 
-            				String.format(Locale.US, "G1 Z%2.2f F%2.0f", a, feedRateMmPerMinuteZ * speed)),10000);
+            				String.format(Locale.US, "G1 Z%2.2f F%2.0f", a, feedRateMmPerMinute * speed)),10000);
                 		}
                 }
             

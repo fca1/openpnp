@@ -47,6 +47,11 @@ public interface ReferenceDriver extends WizardConfigurable, PropertySheetHolder
      */
     public void home(ReferenceHead head) throws Exception;
 
+    
+    default public void calibrate(ReferenceHead head) throws Exception {};
+    
+    
+    
     /**
      * Moves the specified HeadMountable to the given location at a speed defined by (maximum feed
      * rate * speed) where speed is greater than 0 and typically less than or equal to 1. A speed of
