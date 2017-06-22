@@ -682,13 +682,13 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
                 if(plannedPlacement.alignmentOffsets.getPreRotated())
                 {
                     Location location = placementLocation;
-//                    location = location.derive(null, null, null,
-//                            plannedPlacement.alignmentOffsets.getLocation().getRotation());
-//                    placementLocation = location;
-                    // FCA VENOM A TESTER
+                    // patch to have a good behavior for the prerotate (the sign of the angle is not good) - not optimized for facilitate the debug
+                    // Add the offset found with the camera
                 	placementLocation = placementLocation.add(plannedPlacement.alignmentOffsets.getLocation());
+                	// Change the sign of rotation and add
                 	placementLocation = placementLocation.subtractWithRotation(plannedPlacement.alignmentOffsets.getLocation().derive(0.0,0.0,0.0,null));
-                	placementLocation = placementLocation.addWithRotation(location.derive(0.0,0.0,0.0,null));
+                	// Add the location for the part without angle
+					placementLocation = placementLocation.addWithRotation(location.derive(0.0,0.0,0.0,null));
                 }
                 else
                 {

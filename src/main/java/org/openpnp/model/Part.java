@@ -49,7 +49,7 @@ public class Part extends AbstractModelObject implements Identifiable {
     private double speed = 1.0;
 
     @Attribute(required = false)
-    private boolean readonly;
+    private boolean readonly=false;
 
 
     @SuppressWarnings("unused")

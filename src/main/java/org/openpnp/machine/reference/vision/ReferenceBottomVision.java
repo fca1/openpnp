@@ -302,7 +302,7 @@ public class ReferenceBottomVision implements PartAlignment {
         protected CvPipeline pipeline;
         
         @Attribute (required=false) 
-        protected boolean readonly;
+        protected boolean readonly=false;
 
         public boolean isReadonly() {
 			return readonly;

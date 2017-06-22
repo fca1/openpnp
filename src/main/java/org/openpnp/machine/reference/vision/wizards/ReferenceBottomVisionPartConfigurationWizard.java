@@ -190,7 +190,7 @@ public class ReferenceBottomVisionPartConfigurationWizard extends AbstractConfig
 
     @Override
     public void createBindings() {
-        addWrappedBinding(partSettings, "readonly", readOnlyCheckbox, "selected");
+        addWrappedBinding(part, "readonly", readOnlyCheckbox, "selected");
         addWrappedBinding(partSettings, "enabled", enabledCheckbox, "selected");
     }
 }

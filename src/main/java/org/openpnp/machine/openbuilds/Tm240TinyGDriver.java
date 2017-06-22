@@ -257,18 +257,18 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
     public void actuate(ReferenceActuator actuator, boolean on) throws Exception {
          if (actuator.getIndex() == 0) {
         	 sendCommand(on ? "$out3=1" : "$out3=0");
-    		 Thread.sleep(600);
+    		 
         	 // Chercher pendant 1 seconde
         	 long tms = System.currentTimeMillis();
         	 boolean flagOk=false;
         	 do
         	 	{
+        		 Thread.sleep(200);
         		 if (getStateOfNeedle()==on)
         	 	{
         		flagOk=true;
         		break;
         	 	}
-        		 Thread.sleep(600);
         	 	}
         	while(System.currentTimeMillis()-tms<1400);
         	if (!flagOk)
