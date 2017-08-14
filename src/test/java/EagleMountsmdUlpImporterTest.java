@@ -8,7 +8,7 @@ import org.openpnp.model.Configuration;
 import com.google.common.io.Files;
 
 public class EagleMountsmdUlpImporterTest {
-    @Test
+    //@Test
     public void testDemoBoard() throws Exception {
         File workingDirectory = Files.createTempDir();
         workingDirectory = new File(workingDirectory, ".openpnp");
@@ -32,7 +32,7 @@ public class EagleMountsmdUlpImporterTest {
         EagleMountsmdUlpImporter.parseFile(bottom, Side.Bottom, true);
     }
     
-    @Test
+    //@Test
     public void testEAT001() throws Exception {
         File workingDirectory = Files.createTempDir();
         workingDirectory = new File(workingDirectory, ".openpnp");
@@ -54,7 +54,7 @@ public class EagleMountsmdUlpImporterTest {
      * https://github.com/openpnp/openpnp/issues/390
      * @throws Exception
      */
-    @Test
+    //@Test
     public void testWholeNumbers() throws Exception {
         File workingDirectory = Files.createTempDir();
         workingDirectory = new File(workingDirectory, ".openpnp");

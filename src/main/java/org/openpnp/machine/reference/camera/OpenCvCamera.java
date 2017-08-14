@@ -156,7 +156,8 @@ public class OpenCvCamera extends ReferenceCamera implements Runnable {
             if (fg.open(deviceIndex)==false)
             	{
             	Logger.error("Camera with buffer index :"+deviceIndex+ " is not connected");
-            	System.exit(1);
+            	return;
+            	//System.exit(1);
             	}
             
             for (OpenCvCaptureProperty property : OpenCvCaptureProperty.values()) {
