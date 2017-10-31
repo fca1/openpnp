@@ -52,10 +52,14 @@ public class Tm240TinyGDriver extends AbstractSerialPortDriver implements Runnab
 	
 	protected static String HOMEZ_CMD[] = { "G1 F6000 Z200", "G28.3 Z57", "G1 F1000 Z0",
 	};
+	
+	// Pour changer de pas, il faut changer la commande $1SU=xxx.yyyy (X) et $2SU= pour Y
+	
+	
 	protected static String HOMEXY_CMD[] = { "$xzb=2", "$yzb=2", "G28.2 X0 Y0",
 	};
 	protected static String CONNECT_CMD[] = { "$tv=1", "$clear", "$qv=0", "$sv=1", "$ej=2", "$si=10000", "$do8mo=0", "G21", "$sl=0", "$cjm=500", "$cvm=40000",
-			"G90", };
+			"G90", "$1su=32.782", "$2su=32.81" };
 	protected static String GETPOS_CMD[] = { "$sr" };
 	
 	protected static String RESET_CARD[] = { "\u0018" };

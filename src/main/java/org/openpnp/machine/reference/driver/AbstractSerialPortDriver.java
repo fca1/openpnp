@@ -9,6 +9,7 @@ import java.util.concurrent.TimeoutException;
 import javax.swing.Action;
 import javax.swing.Icon;
 
+import org.jcodec.common.logging.Logger;
 import org.openpnp.gui.support.PropertySheetWizardAdapter;
 import org.openpnp.gui.support.Wizard;
 import org.openpnp.machine.reference.ReferenceDriver;
@@ -111,12 +112,14 @@ public abstract class AbstractSerialPortDriver extends AbstractModelObject imple
     protected synchronized void connect() throws Exception {
         disconnect();
         serialPort = new SerialPort(portName);
+
         serialPort.openPort();
         serialPort.setParams(baud, dataBits.mask, stopBits.mask, parity.mask, setRts, setDtr);
         serialPort.setFlowControlMode(flowControl.mask);
         input = new SerialInputStream(serialPort);
         input.setTimeout(500);
         output = new SerialOutputStream(serialPort);
+
     }
 
     protected synchronized void disconnect() throws Exception {
